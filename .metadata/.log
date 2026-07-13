@@ -1,0 +1,1025 @@
+!SESSION 2026-07-13 21:36:59.638 -----------------------------------------------
+eclipse.buildId=Version 1.17.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.egit.core 1 0 2026-07-13 21:37:57.608
+!MESSAGE Using Apache MINA sshd as ssh client.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2026-07-13 21:38:00.548
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-07-13 21:38:00.549
+!MESSAGE Log4j2 initialized with config file C:\Users\AA\Desktop\GIT_STM\.metadata\.log4j2.xml
+
+!ENTRY org.eclipse.egit.ui 2 0 2026-07-13 21:38:02.332
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\AA'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-07-13 21:38:04.084
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.director 4 0 2026-07-13 21:41:21.511
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+java.io.IOException: Exception in opening zip file: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.equinox.p2.director_2.6.200.v20231021-1906.jar
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:360)
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.doOpen(ZipBundleFile.java:51)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.internalOpen(CloseableBundleFile.java:140)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.lockOpen(CloseableBundleFile.java:78)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.getEntry(CloseableBundleFile.java:274)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathEntry.findEntry(ClasspathEntry.java:195)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:621)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:607)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:587)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:566)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.sources.SingleSourcePackage.loadClass(SingleSourcePackage.java:41)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:479)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getPlanner(UpdateChecker.java:174)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:136)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:78)
+Caused by: java.nio.file.NoSuchFileException: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.equinox.p2.director_2.6.200.v20231021-1906.jar
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:197)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1853)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1445)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:724)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:194)
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:342)
+	... 19 more
+
+!ENTRY org.eclipse.core.resources 4 0 2026-07-13 21:42:45.448
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+java.io.IOException: Exception in opening zip file: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.core.resources_3.20.0.v20231102-0934.jar
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:360)
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.doOpen(ZipBundleFile.java:51)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.internalOpen(CloseableBundleFile.java:140)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.lockOpen(CloseableBundleFile.java:78)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.getEntry(CloseableBundleFile.java:274)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathEntry.findEntry(ClasspathEntry.java:195)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:621)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:607)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:587)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:566)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:500)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.core.internal.utils.StringPoolJob.shareStrings(StringPoolJob.java:121)
+	at org.eclipse.core.internal.utils.StringPoolJob.run(StringPoolJob.java:103)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.NoSuchFileException: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.core.resources_3.20.0.v20231102-0934.jar
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:197)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1853)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1445)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:724)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:194)
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:342)
+	... 18 more
+
+!ENTRY org.eclipse.core.jobs 4 2 2026-07-13 21:42:45.450
+!MESSAGE An internal error occurred during: "Compacting resource model".
+!STACK 0
+java.lang.NoClassDefFoundError: org/eclipse/core/internal/utils/StringPool
+	at org.eclipse.core.internal.utils.StringPoolJob.shareStrings(StringPoolJob.java:121)
+	at org.eclipse.core.internal.utils.StringPoolJob.run(StringPoolJob.java:103)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.lang.ClassNotFoundException: org.eclipse.core.internal.utils.StringPool cannot be found by org.eclipse.core.resources_3.20.0.v20231102-0934
+	at org.eclipse.osgi.internal.loader.BundleLoader.generateException(BundleLoader.java:541)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:536)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	... 3 more
+
+!ENTRY org.eclipse.emf.ecore 4 0 2026-07-13 21:42:58.170
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+java.io.IOException: Exception in opening zip file: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.ecore_2.35.0.v20230829-0934.jar
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:360)
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.doOpen(ZipBundleFile.java:51)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.internalOpen(CloseableBundleFile.java:140)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.lockOpen(CloseableBundleFile.java:78)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.getEntry(CloseableBundleFile.java:274)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathEntry.findEntry(ClasspathEntry.java:195)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:621)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:607)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:587)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:566)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.sources.SingleSourcePackage.loadClass(SingleSourcePackage.java:41)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:496)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl.doSave(XMLResourceImpl.java:307)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.save(ResourceImpl.java:1475)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.save(ResourceImpl.java:1044)
+	at org.eclipse.ui.internal.Workbench$15.run(Workbench.java:1279)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.NoSuchFileException: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.ecore_2.35.0.v20230829-0934.jar
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:197)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1853)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1445)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:724)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:194)
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:342)
+	... 21 more
+
+!ENTRY org.eclipse.emf.ecore.xmi 4 0 2026-07-13 21:42:58.171
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+java.io.IOException: Exception in opening zip file: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.ecore.xmi_2.36.0.v20231002-1156.jar
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:360)
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.doOpen(ZipBundleFile.java:51)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.internalOpen(CloseableBundleFile.java:140)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.lockOpen(CloseableBundleFile.java:78)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.getEntry(CloseableBundleFile.java:274)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathEntry.findEntry(ClasspathEntry.java:195)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:621)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:607)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:587)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:566)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:500)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl.doSave(XMLResourceImpl.java:307)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.save(ResourceImpl.java:1475)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.save(ResourceImpl.java:1044)
+	at org.eclipse.ui.internal.Workbench$15.run(Workbench.java:1279)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.NoSuchFileException: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.ecore.xmi_2.36.0.v20231002-1156.jar
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:197)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1853)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1445)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:724)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:194)
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:342)
+	... 20 more
+
+!ENTRY org.eclipse.emf.common 4 0 2026-07-13 21:42:58.172
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+java.io.IOException: Exception in opening zip file: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.common_2.29.0.v20230916-0637.jar
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:360)
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.doOpen(ZipBundleFile.java:51)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.internalOpen(CloseableBundleFile.java:140)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.lockOpen(CloseableBundleFile.java:78)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.getEntry(CloseableBundleFile.java:274)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathEntry.findEntry(ClasspathEntry.java:195)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:621)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:607)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:587)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:566)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.sources.SingleSourcePackage.loadClass(SingleSourcePackage.java:41)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:496)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.getUnloadingContents(ResourceImpl.java:1683)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.unload(ResourceImpl.java:1717)
+	at org.eclipse.ui.internal.Workbench$15.run(Workbench.java:1284)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.NoSuchFileException: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.common_2.29.0.v20230916-0637.jar
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:197)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1853)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1445)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:724)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:194)
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:342)
+	... 20 more
+
+!ENTRY org.eclipse.emf.ecore 4 0 2026-07-13 21:42:58.173
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+java.io.IOException: Exception in opening zip file: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.ecore_2.35.0.v20230829-0934.jar
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:360)
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.doOpen(ZipBundleFile.java:51)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.internalOpen(CloseableBundleFile.java:140)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.lockOpen(CloseableBundleFile.java:78)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.getEntry(CloseableBundleFile.java:274)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathEntry.findEntry(ClasspathEntry.java:195)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:621)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:607)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:587)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:566)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:500)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.getUnloadingContents(ResourceImpl.java:1683)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.unload(ResourceImpl.java:1717)
+	at org.eclipse.ui.internal.Workbench$15.run(Workbench.java:1284)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.NoSuchFileException: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.ecore_2.35.0.v20230829-0934.jar
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:197)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1853)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1445)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:724)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:194)
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:342)
+	... 19 more
+
+!ENTRY org.eclipse.emf.common 4 0 2026-07-13 21:42:58.180
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+java.io.IOException: Exception in opening zip file: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.common_2.29.0.v20230916-0637.jar
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:360)
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.doOpen(ZipBundleFile.java:51)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.internalOpen(CloseableBundleFile.java:140)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.lockOpen(CloseableBundleFile.java:78)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.getEntry(CloseableBundleFile.java:274)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathEntry.findEntry(ClasspathEntry.java:195)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:621)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:607)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:587)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:566)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.sources.SingleSourcePackage.loadClass(SingleSourcePackage.java:41)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:496)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassNoParentNoException(BundleLoader.java:433)
+	at org.eclipse.osgi.internal.loader.buddy.DependentPolicy.loadClass(DependentPolicy.java:60)
+	at org.eclipse.osgi.internal.loader.buddy.PolicyHandler.doBuddyClassLoading(PolicyHandler.java:156)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:522)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.getUnloadingContents(ResourceImpl.java:1683)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.unload(ResourceImpl.java:1717)
+	at org.eclipse.ui.internal.Workbench$15.run(Workbench.java:1284)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.NoSuchFileException: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.common_2.29.0.v20230916-0637.jar
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:197)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1853)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1445)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:724)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:194)
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:342)
+	... 24 more
+
+!ENTRY org.eclipse.core.jobs 4 2 2026-07-13 21:42:58.181
+!MESSAGE An internal error occurred during: "Workbench Auto-Save Background Job".
+!STACK 0
+java.lang.RuntimeException: Could not create bundle file.
+	at org.eclipse.osgi.storage.Storage.createBundleFile(Storage.java:1191)
+	at org.eclipse.osgi.storage.BundleInfo$Generation.getBundleFile(BundleInfo.java:111)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.addStandardClassPathEntry(ClasspathManager.java:210)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.addClassPathEntry(ClasspathManager.java:205)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassPathEntry(ClasspathManager.java:188)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.buildClasspath(ClasspathManager.java:166)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.<init>(ClasspathManager.java:94)
+	at org.eclipse.osgi.internal.loader.EquinoxClassLoader.<init>(EquinoxClassLoader.java:54)
+	at org.eclipse.osgi.internal.loader.BundleLoader.createClassLoaderPrivledged(BundleLoader.java:345)
+	at org.eclipse.osgi.internal.loader.BundleLoader.getModuleClassLoader(BundleLoader.java:262)
+	at org.eclipse.osgi.internal.loader.BundleLoader.searchHooks(BundleLoader.java:561)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:466)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassNoParentNoException(BundleLoader.java:433)
+	at org.eclipse.osgi.internal.loader.buddy.DependentPolicy.loadClass(DependentPolicy.java:60)
+	at org.eclipse.osgi.internal.loader.buddy.PolicyHandler.doBuddyClassLoading(PolicyHandler.java:156)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:522)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.getUnloadingContents(ResourceImpl.java:1683)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.unload(ResourceImpl.java:1717)
+	at org.eclipse.ui.internal.Workbench$15.run(Workbench.java:1284)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.io.IOException: The file "C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.e4.emf.xpath_0.4.100.v20230801-1255.jar" does not exist
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.<init>(ZipBundleFile.java:46)
+	at org.eclipse.osgi.storage.Storage.createBundleFile(Storage.java:1187)
+	... 22 more
+
+!ENTRY org.eclipse.emf.ecore.xmi 4 0 2026-07-13 21:42:58.181
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+java.io.IOException: Exception in opening zip file: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.ecore.xmi_2.36.0.v20231002-1156.jar
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:360)
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.doOpen(ZipBundleFile.java:51)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.internalOpen(CloseableBundleFile.java:140)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.lockOpen(CloseableBundleFile.java:78)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.getEntry(CloseableBundleFile.java:274)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathEntry.findEntry(ClasspathEntry.java:195)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:621)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:607)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:587)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:566)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:500)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassNoParentNoException(BundleLoader.java:433)
+	at org.eclipse.osgi.internal.loader.buddy.DependentPolicy.loadClass(DependentPolicy.java:60)
+	at org.eclipse.osgi.internal.loader.buddy.PolicyHandler.doBuddyClassLoading(PolicyHandler.java:156)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:522)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.getUnloadingContents(ResourceImpl.java:1683)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.unload(ResourceImpl.java:1717)
+	at org.eclipse.ui.internal.Workbench$15.run(Workbench.java:1284)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.nio.file.NoSuchFileException: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.emf.ecore.xmi_2.36.0.v20231002-1156.jar
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:197)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1853)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1445)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:724)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:194)
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:342)
+	... 23 more
+
+!ENTRY org.eclipse.e4.ui.css.swt 4 0 2026-07-13 21:42:58.193
+!MESSAGE FrameworkEvent ERROR
+!STACK 0
+java.io.IOException: Exception in opening zip file: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.e4.ui.css.swt_0.15.200.v20231025-0632.jar
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:360)
+	at org.eclipse.osgi.storage.bundlefile.ZipBundleFile.doOpen(ZipBundleFile.java:51)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.internalOpen(CloseableBundleFile.java:140)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.lockOpen(CloseableBundleFile.java:78)
+	at org.eclipse.osgi.storage.bundlefile.CloseableBundleFile.getEntry(CloseableBundleFile.java:274)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathEntry.findEntry(ClasspathEntry.java:195)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findClassImpl(ClasspathManager.java:621)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:607)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClassImpl(ClasspathManager.java:587)
+	at org.eclipse.osgi.internal.loader.classpath.ClasspathManager.findLocalClass(ClasspathManager.java:566)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.findLocalClass(ModuleClassLoader.java:335)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:397)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:500)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	at org.eclipse.e4.ui.css.swt.dom.SWTElementProvider.getElement(SWTElementProvider.java:95)
+	at org.eclipse.e4.ui.css.core.impl.engine.RegistryCSSElementProvider.getElement(RegistryCSSElementProvider.java:69)
+	at org.eclipse.e4.ui.css.core.impl.engine.AbstractCSSEngine.getElement(AbstractCSSEngine.java:869)
+	at org.eclipse.e4.ui.css.swt.engine.AbstractCSSSWTEngineImpl.getElement(AbstractCSSSWTEngineImpl.java:97)
+	at org.eclipse.e4.ui.css.core.impl.engine.AbstractCSSEngine.applyStyles(AbstractCSSEngine.java:378)
+	at org.eclipse.e4.ui.css.core.impl.engine.AbstractCSSEngine.applyStyles(AbstractCSSEngine.java:373)
+	at org.eclipse.e4.ui.css.swt.engine.CSSSWTApplyStylesListener.lambda$0(CSSSWTApplyStylesListener.java:31)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4273)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4265)
+	at org.eclipse.swt.widgets.Display.runSkin(Display.java:4149)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1333)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1320)
+	at org.eclipse.swt.widgets.Composite.layout(Composite.java:700)
+	at org.eclipse.swt.widgets.Composite.layout(Composite.java:652)
+	at org.eclipse.swt.widgets.Composite.layout(Composite.java:608)
+	at org.eclipse.ui.internal.statushandlers.InternalDialog.updateListArea(InternalDialog.java:519)
+	at org.eclipse.ui.internal.statushandlers.InternalDialog.refresh(InternalDialog.java:336)
+	at org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl.openStatusDialog(WorkbenchStatusDialogManagerImpl.java:299)
+	at org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl.doAddStatusAdapter(WorkbenchStatusDialogManagerImpl.java:267)
+	at org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl.addStatusAdapter(WorkbenchStatusDialogManagerImpl.java:188)
+	at org.eclipse.ui.statushandlers.WorkbenchStatusDialogManager.addStatusAdapter(WorkbenchStatusDialogManager.java:152)
+	at org.eclipse.ui.statushandlers.WorkbenchErrorHandler.showStatusAdapter(WorkbenchErrorHandler.java:97)
+	at org.eclipse.ui.statushandlers.WorkbenchErrorHandler.lambda$0(WorkbenchErrorHandler.java:61)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:132)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4046)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3662)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:648)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:555)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:651)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:588)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1459)
+Caused by: java.nio.file.NoSuchFileException: C:\ST\STM32CubeIDE_1.17.0\STM32CubeIDE\plugins\org.eclipse.e4.ui.css.swt_0.15.200.v20231025-0632.jar
+	at java.base/sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103)
+	at java.base/sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:53)
+	at java.base/sun.nio.fs.WindowsFileAttributeViews$Basic.readAttributes(WindowsFileAttributeViews.java:38)
+	at java.base/sun.nio.fs.WindowsFileSystemProvider.readAttributes(WindowsFileSystemProvider.java:197)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1853)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1445)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:724)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:194)
+	at org.eclipse.osgi.framework.util.SecureAction.getZipFile(SecureAction.java:342)
+	... 62 more
+
+!ENTRY org.eclipse.ui 4 0 2026-07-13 21:42:58.194
+!MESSAGE Unhandled event loop exception
+!STACK 0
+java.lang.NoClassDefFoundError: org/eclipse/e4/ui/css/swt/dom/TableItemElement
+	at org.eclipse.e4.ui.css.swt.dom.SWTElementProvider.getElement(SWTElementProvider.java:95)
+	at org.eclipse.e4.ui.css.core.impl.engine.RegistryCSSElementProvider.getElement(RegistryCSSElementProvider.java:69)
+	at org.eclipse.e4.ui.css.core.impl.engine.AbstractCSSEngine.getElement(AbstractCSSEngine.java:869)
+	at org.eclipse.e4.ui.css.swt.engine.AbstractCSSSWTEngineImpl.getElement(AbstractCSSSWTEngineImpl.java:97)
+	at org.eclipse.e4.ui.css.core.impl.engine.AbstractCSSEngine.applyStyles(AbstractCSSEngine.java:378)
+	at org.eclipse.e4.ui.css.core.impl.engine.AbstractCSSEngine.applyStyles(AbstractCSSEngine.java:373)
+	at org.eclipse.e4.ui.css.swt.engine.CSSSWTApplyStylesListener.lambda$0(CSSSWTApplyStylesListener.java:31)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4273)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4265)
+	at org.eclipse.swt.widgets.Display.runSkin(Display.java:4149)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1333)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1320)
+	at org.eclipse.swt.widgets.Composite.layout(Composite.java:700)
+	at org.eclipse.swt.widgets.Composite.layout(Composite.java:652)
+	at org.eclipse.swt.widgets.Composite.layout(Composite.java:608)
+	at org.eclipse.ui.internal.statushandlers.InternalDialog.updateListArea(InternalDialog.java:519)
+	at org.eclipse.ui.internal.statushandlers.InternalDialog.refresh(InternalDialog.java:336)
+	at org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl.openStatusDialog(WorkbenchStatusDialogManagerImpl.java:299)
+	at org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl.doAddStatusAdapter(WorkbenchStatusDialogManagerImpl.java:267)
+	at org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl.addStatusAdapter(WorkbenchStatusDialogManagerImpl.java:188)
+	at org.eclipse.ui.statushandlers.WorkbenchStatusDialogManager.addStatusAdapter(WorkbenchStatusDialogManager.java:152)
+	at org.eclipse.ui.statushandlers.WorkbenchErrorHandler.showStatusAdapter(WorkbenchErrorHandler.java:97)
+	at org.eclipse.ui.statushandlers.WorkbenchErrorHandler.lambda$0(WorkbenchErrorHandler.java:61)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:132)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4046)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3662)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:648)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:555)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:651)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:588)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1459)
+Caused by: java.lang.ClassNotFoundException: org.eclipse.e4.ui.css.swt.dom.TableItemElement cannot be found by org.eclipse.e4.ui.css.swt_0.15.200.v20231025-0632
+	at org.eclipse.osgi.internal.loader.BundleLoader.generateException(BundleLoader.java:541)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:536)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	... 47 more
+
+!ENTRY org.eclipse.ui 4 0 2026-07-13 21:42:58.195
+!MESSAGE Unhandled event loop exception
+!STACK 0
+java.lang.NoClassDefFoundError: org/eclipse/e4/ui/css/swt/dom/TableItemElement
+	at org.eclipse.e4.ui.css.swt.dom.SWTElementProvider.getElement(SWTElementProvider.java:95)
+	at org.eclipse.e4.ui.css.core.impl.engine.RegistryCSSElementProvider.getElement(RegistryCSSElementProvider.java:55)
+	at org.eclipse.e4.ui.css.core.impl.engine.AbstractCSSEngine.getElement(AbstractCSSEngine.java:869)
+	at org.eclipse.e4.ui.css.swt.engine.AbstractCSSSWTEngineImpl.getElement(AbstractCSSSWTEngineImpl.java:97)
+	at org.eclipse.e4.ui.css.core.impl.engine.AbstractCSSEngine.applyStyles(AbstractCSSEngine.java:378)
+	at org.eclipse.e4.ui.css.core.impl.engine.AbstractCSSEngine.applyStyles(AbstractCSSEngine.java:373)
+	at org.eclipse.e4.ui.css.swt.engine.CSSSWTApplyStylesListener.lambda$0(CSSSWTApplyStylesListener.java:31)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4273)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4265)
+	at org.eclipse.swt.widgets.Display.runSkin(Display.java:4149)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1333)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1320)
+	at org.eclipse.swt.widgets.Composite.layout(Composite.java:700)
+	at org.eclipse.swt.widgets.Composite.layout(Composite.java:652)
+	at org.eclipse.swt.widgets.Composite.layout(Composite.java:608)
+	at org.eclipse.ui.internal.statushandlers.InternalDialog.updateListArea(InternalDialog.java:519)
+	at org.eclipse.ui.internal.statushandlers.InternalDialog.refresh(InternalDialog.java:336)
+	at org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl.openStatusDialog(WorkbenchStatusDialogManagerImpl.java:299)
+	at org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl.doAddStatusAdapter(WorkbenchStatusDialogManagerImpl.java:267)
+	at org.eclipse.ui.internal.statushandlers.WorkbenchStatusDialogManagerImpl.addStatusAdapter(WorkbenchStatusDialogManagerImpl.java:188)
+	at org.eclipse.ui.statushandlers.WorkbenchStatusDialogManager.addStatusAdapter(WorkbenchStatusDialogManager.java:152)
+	at org.eclipse.ui.statushandlers.WorkbenchErrorHandler.showStatusAdapter(WorkbenchErrorHandler.java:97)
+	at org.eclipse.ui.statushandlers.WorkbenchErrorHandler.lambda$0(WorkbenchErrorHandler.java:61)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:132)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:4046)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3662)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:648)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:555)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:651)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:588)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1459)
+Caused by: java.lang.ClassNotFoundException: org.eclipse.e4.ui.css.swt.dom.TableItemElement cannot be found by org.eclipse.e4.ui.css.swt_0.15.200.v20231025-0632
+	... 47 more
+
+!ENTRY org.eclipse.ui.workbench 4 2 2026-07-13 23:15:49.062
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.ui.workbench".
+!STACK 0
+java.lang.NoClassDefFoundError: com/st/stm32cube/common/mx/core/SwtAwtBridgeSetup$1$1
+	at com.st.stm32cube.common.mx.core.SwtAwtBridgeSetup$1.preShutdown(SwtAwtBridgeSetup.java:40)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:946)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:174)
+	at org.eclipse.ui.internal.Workbench.firePreShutdown(Workbench.java:943)
+	at org.eclipse.ui.internal.Workbench.busyClose(Workbench.java:1072)
+	at org.eclipse.ui.internal.Workbench.lambda$4(Workbench.java:1418)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1418)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1394)
+	at org.eclipse.ui.internal.WorkbenchWindow.busyClose(WorkbenchWindow.java:1718)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$5(WorkbenchWindow.java:1745)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1745)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1754)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$2(WorkbenchWindow.java:505)
+	at org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer.lambda$4(WBWRenderer.java:570)
+	at org.eclipse.swt.events.ShellListener$2.shellClosed(ShellListener.java:102)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:102)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4273)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1066)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1090)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1075)
+	at org.eclipse.swt.widgets.Decorations.closeWidget(Decorations.java:269)
+	at org.eclipse.swt.widgets.Decorations.WM_CLOSE(Decorations.java:1550)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4746)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:340)
+	at org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java:1478)
+	at org.eclipse.swt.widgets.Shell.windowProc(Shell.java:2305)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5039)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Shell.callWindowProc(Shell.java:508)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4845)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:340)
+	at org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java:1478)
+	at org.eclipse.swt.widgets.Shell.windowProc(Shell.java:2305)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5039)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Shell.callWindowProc(Shell.java:508)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4845)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:340)
+	at org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java:1478)
+	at org.eclipse.swt.widgets.Shell.windowProc(Shell.java:2305)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5039)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(Native Method)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3657)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:648)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:555)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:651)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:588)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1459)
+Caused by: java.lang.ClassNotFoundException: com.st.stm32cube.common.mx.core.SwtAwtBridgeSetup$1$1 cannot be found by com.st.stm32cube.common.mx_6.13.0.202411220809
+	at org.eclipse.osgi.internal.loader.BundleLoader.generateException(BundleLoader.java:541)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass0(BundleLoader.java:536)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:416)
+	at org.eclipse.osgi.internal.loader.ModuleClassLoader.loadClass(ModuleClassLoader.java:168)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:526)
+	... 66 more
+
+!ENTRY org.eclipse.ui.workbench 4 2 2026-07-13 23:16:00.212
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.ui.workbench".
+!STACK 0
+java.lang.NoClassDefFoundError: com/st/stm32cube/common/mx/core/SwtAwtBridgeSetup$1$1
+	at com.st.stm32cube.common.mx.core.SwtAwtBridgeSetup$1.preShutdown(SwtAwtBridgeSetup.java:40)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:946)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:174)
+	at org.eclipse.ui.internal.Workbench.firePreShutdown(Workbench.java:943)
+	at org.eclipse.ui.internal.Workbench.busyClose(Workbench.java:1072)
+	at org.eclipse.ui.internal.Workbench.lambda$4(Workbench.java:1418)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1418)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1394)
+	at org.eclipse.ui.internal.WorkbenchWindow.busyClose(WorkbenchWindow.java:1718)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$5(WorkbenchWindow.java:1745)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1745)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1754)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$2(WorkbenchWindow.java:505)
+	at org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer.lambda$4(WBWRenderer.java:570)
+	at org.eclipse.swt.events.ShellListener$2.shellClosed(ShellListener.java:102)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:102)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4273)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1066)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1090)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1075)
+	at org.eclipse.swt.widgets.Decorations.closeWidget(Decorations.java:269)
+	at org.eclipse.swt.widgets.Decorations.WM_CLOSE(Decorations.java:1550)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4746)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:340)
+	at org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java:1478)
+	at org.eclipse.swt.widgets.Shell.windowProc(Shell.java:2305)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5039)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Shell.callWindowProc(Shell.java:508)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4845)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:340)
+	at org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java:1478)
+	at org.eclipse.swt.widgets.Shell.windowProc(Shell.java:2305)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5039)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Shell.callWindowProc(Shell.java:508)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4845)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:340)
+	at org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java:1478)
+	at org.eclipse.swt.widgets.Shell.windowProc(Shell.java:2305)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5039)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(Native Method)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3657)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:648)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:555)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:651)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:588)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1459)
+Caused by: java.lang.ClassNotFoundException: com.st.stm32cube.common.mx.core.SwtAwtBridgeSetup$1$1 cannot be found by com.st.stm32cube.common.mx_6.13.0.202411220809
+	... 66 more
+
+!ENTRY org.eclipse.ui.workbench 4 2 2026-07-13 23:16:13.325
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.ui.workbench".
+!STACK 0
+java.lang.NoClassDefFoundError: com/st/stm32cube/common/mx/core/SwtAwtBridgeSetup$1$1
+	at com.st.stm32cube.common.mx.core.SwtAwtBridgeSetup$1.preShutdown(SwtAwtBridgeSetup.java:40)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:946)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:47)
+	at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:174)
+	at org.eclipse.ui.internal.Workbench.firePreShutdown(Workbench.java:943)
+	at org.eclipse.ui.internal.Workbench.busyClose(Workbench.java:1072)
+	at org.eclipse.ui.internal.Workbench.lambda$4(Workbench.java:1418)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1418)
+	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1394)
+	at org.eclipse.ui.internal.WorkbenchWindow.busyClose(WorkbenchWindow.java:1718)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$5(WorkbenchWindow.java:1745)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1745)
+	at org.eclipse.ui.internal.WorkbenchWindow.close(WorkbenchWindow.java:1754)
+	at org.eclipse.ui.internal.WorkbenchWindow.lambda$2(WorkbenchWindow.java:505)
+	at org.eclipse.e4.ui.workbench.renderers.swt.WBWRenderer.lambda$4(WBWRenderer.java:570)
+	at org.eclipse.swt.events.ShellListener$2.shellClosed(ShellListener.java:102)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:102)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:89)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4273)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1066)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1090)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1075)
+	at org.eclipse.swt.widgets.Decorations.closeWidget(Decorations.java:269)
+	at org.eclipse.swt.widgets.Decorations.WM_CLOSE(Decorations.java:1550)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4746)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:340)
+	at org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java:1478)
+	at org.eclipse.swt.widgets.Shell.windowProc(Shell.java:2305)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5039)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Shell.callWindowProc(Shell.java:508)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4845)
+	at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:340)
+	at org.eclipse.swt.widgets.Decorations.windowProc(Decorations.java:1478)
+	at org.eclipse.swt.widgets.Shell.windowProc(Shell.java:2305)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5039)
+	at org.eclipse.swt.internal.win32.OS.PeekMessage(Native Method)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3654)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1155)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1046)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:155)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:648)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:555)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:651)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:588)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1459)
+Caused by: java.lang.ClassNotFoundException: com.st.stm32cube.common.mx.core.SwtAwtBridgeSetup$1$1 cannot be found by com.st.stm32cube.common.mx_6.13.0.202411220809
+	... 59 more
+!SESSION 2026-07-13 23:18:38.688 -----------------------------------------------
+eclipse.buildId=Version 1.17.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2026-07-13 23:18:53.883
+!MESSAGE Unable to load resource file:/C:/Users/AA/Desktop/GIT_STM/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
+!STACK 0
+org.eclipse.emf.ecore.resource.impl.ResourceSetImpl$1DiagnosticWrappedException: org.xml.sax.SAXParseExceptionpublicId: file:/C:/Users/AA/Desktop/GIT_STM/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi; systemId: file:/C:/Users/AA/Desktop/GIT_STM/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi; lineNumber: 1; columnNumber: 1; Premature end of file.
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.handleDemandLoadException(ResourceSetImpl.java:319)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:278)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.getResource(ResourceSetImpl.java:406)
+	at org.eclipse.e4.ui.internal.workbench.ResourceHandler.getResource(ResourceHandler.java:290)
+	at org.eclipse.e4.ui.internal.workbench.ResourceHandler.loadResource(ResourceHandler.java:266)
+	at org.eclipse.e4.ui.internal.workbench.ResourceHandler.loadMostRecentModel(ResourceHandler.java:169)
+	at org.eclipse.e4.ui.internal.workbench.swt.E4Application.loadApplicationModel(E4Application.java:371)
+	at org.eclipse.e4.ui.internal.workbench.swt.E4Application.createE4Workbench(E4Application.java:247)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:577)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:555)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:651)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:588)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1459)
+Caused by: org.xml.sax.SAXParseExceptionpublicId: file:/C:/Users/AA/Desktop/GIT_STM/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi; systemId: file:/C:/Users/AA/Desktop/GIT_STM/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi; lineNumber: 1; columnNumber: 1; Premature end of file.
+	at java.xml/com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.createSAXParseException(ErrorHandlerWrapper.java:204)
+	at java.xml/com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.fatalError(ErrorHandlerWrapper.java:178)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:400)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:327)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLScanner.reportFatalError(XMLScanner.java:1465)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl$PrologDriver.next(XMLDocumentScannerImpl.java:1013)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:605)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.next(XMLNSDocumentScannerImpl.java:114)
+	at java.xml/com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:542)
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:889)
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:825)
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:141)
+	at java.xml/com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1224)
+	at java.xml/com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:637)
+	at java.xml/com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl.parse(SAXParserImpl.java:326)
+	at org.eclipse.emf.ecore.xmi.impl.XMLLoadImpl.load(XMLLoadImpl.java:175)
+	at org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl.doLoad(XMLResourceImpl.java:261)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1563)
+	at org.eclipse.emf.ecore.resource.impl.ResourceImpl.load(ResourceImpl.java:1342)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoad(ResourceSetImpl.java:259)
+	at org.eclipse.emf.ecore.resource.impl.ResourceSetImpl.demandLoadHelper(ResourceSetImpl.java:274)
+	... 21 more
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2026-07-13 23:18:53.883
+!MESSAGE The persisted application model has no top-level window. Reinitializing with the default application model.
+!STACK 0
+java.lang.Exception
+	at org.eclipse.e4.ui.internal.workbench.ResourceHandler.loadMostRecentModel(ResourceHandler.java:174)
+	at org.eclipse.e4.ui.internal.workbench.swt.E4Application.loadApplicationModel(E4Application.java:371)
+	at org.eclipse.e4.ui.internal.workbench.swt.E4Application.createE4Workbench(E4Application.java:247)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:577)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:342)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:555)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:152)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:136)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:104)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:402)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:255)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:651)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:588)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1459)
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2026-07-13 23:18:57.670
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-07-13 23:18:57.671
+!MESSAGE Log4j2 initialized with config file C:\Users\AA\Desktop\GIT_STM\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-07-13 23:19:03.249
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2026-07-14 00:11:13.381
+!MESSAGE Indexed 'G491RE_rtos_test1' (24 sources, 86 headers) in 3.03 sec: 5,676 declarations; 28,259 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0059%)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2026-07-14 00:33:54.638
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2026-07-14 00:34:59.069
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2026-07-14 00:35:12.888
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2026-07-14 00:36:13.047
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2026-07-14 00:36:32.806
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2026-07-14 00:37:46.161
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2026-07-14 00:42:15.704
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2026-07-14 00:43:38.219
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 00:46:44.021
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 00:48:03.524
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 00:50:36.535
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 01:01:56.976
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2
+
+!ENTRY org.eclipse.cdt.dsf.gdb 4 104 2026-07-14 01:03:31.796
+!MESSAGE Program file does not exist
+!STACK 0
+java.io.FileNotFoundException: C:\Users\AA\Desktop\GIT_STM\G491RE_rtos_test1\Debug\G491RE_rtos_test1.elf not found
+	at org.eclipse.cdt.dsf.gdb.launching.LaunchUtils.verifyProgramPath(LaunchUtils.java:130)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.checkBinaryDetails(GdbLaunchDelegate.java:330)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugSession(GdbLaunchDelegate.java:152)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugger(GdbLaunchDelegate.java:109)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launch(GdbLaunchDelegate.java:97)
+	at com.st.stm32cube.ide.mcu.debug.launch.DSFDelegate.launch(DSFDelegate.java:336)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:805)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:716)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1040)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$1.run(DebugUIPlugin.java:1243)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 104 2026-07-14 01:03:31.796
+!MESSAGE C:\Users\AA\Desktop\GIT_STM\G491RE_rtos_test1\Debug\G491RE_rtos_test1.elf not found
+!STACK 0
+java.io.FileNotFoundException: C:\Users\AA\Desktop\GIT_STM\G491RE_rtos_test1\Debug\G491RE_rtos_test1.elf not found
+	at org.eclipse.cdt.dsf.gdb.launching.LaunchUtils.verifyProgramPath(LaunchUtils.java:130)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.checkBinaryDetails(GdbLaunchDelegate.java:330)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugSession(GdbLaunchDelegate.java:152)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugger(GdbLaunchDelegate.java:109)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launch(GdbLaunchDelegate.java:97)
+	at com.st.stm32cube.ide.mcu.debug.launch.DSFDelegate.launch(DSFDelegate.java:336)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:805)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:716)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1040)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$1.run(DebugUIPlugin.java:1243)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.cdt.dsf.gdb 4 104 2026-07-14 01:05:38.273
+!MESSAGE Program file does not exist
+!STACK 0
+java.io.FileNotFoundException: C:\Users\AA\Desktop\GIT_STM\G491RE_rtos_test1\Debug\G491RE_rtos_test1.elf not found
+	at org.eclipse.cdt.dsf.gdb.launching.LaunchUtils.verifyProgramPath(LaunchUtils.java:130)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.checkBinaryDetails(GdbLaunchDelegate.java:330)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugSession(GdbLaunchDelegate.java:152)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugger(GdbLaunchDelegate.java:109)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launch(GdbLaunchDelegate.java:97)
+	at com.st.stm32cube.ide.mcu.debug.launch.DSFDelegate.launch(DSFDelegate.java:336)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:805)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:716)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1040)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$1.run(DebugUIPlugin.java:1243)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 104 2026-07-14 01:05:38.273
+!MESSAGE C:\Users\AA\Desktop\GIT_STM\G491RE_rtos_test1\Debug\G491RE_rtos_test1.elf not found
+!STACK 0
+java.io.FileNotFoundException: C:\Users\AA\Desktop\GIT_STM\G491RE_rtos_test1\Debug\G491RE_rtos_test1.elf not found
+	at org.eclipse.cdt.dsf.gdb.launching.LaunchUtils.verifyProgramPath(LaunchUtils.java:130)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.checkBinaryDetails(GdbLaunchDelegate.java:330)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugSession(GdbLaunchDelegate.java:152)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugger(GdbLaunchDelegate.java:109)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launch(GdbLaunchDelegate.java:97)
+	at com.st.stm32cube.ide.mcu.debug.launch.DSFDelegate.launch(DSFDelegate.java:336)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:805)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:716)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1040)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$1.run(DebugUIPlugin.java:1243)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 01:13:48.369
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 01:16:22.336
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 01:48:32.838
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 01:49:14.327
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 01:59:01.496
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.swv 1 1 2026-07-14 02:00:27.164
+!MESSAGE SWV configuration; base: 192000000; minDiv: 16; maxDiv: 65535; maxSWO: 12000000; limit: 12000000 => SWO: 8000000; CPU: 16000000; div: 2

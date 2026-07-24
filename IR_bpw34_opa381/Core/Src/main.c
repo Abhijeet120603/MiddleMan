@@ -60,6 +60,13 @@ const osThreadAttr_t Send_Bpw34_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for Command_Handler */
+osThreadId_t Command_HandlerHandle;
+const osThreadAttr_t Command_Handler_attributes = {
+  .name = "Command_Handler",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityHigh,
+};
 /* Definitions for Data_Holder */
 osMessageQueueId_t Data_HolderHandle;
 const osMessageQueueAttr_t Data_Holder_attributes = {
@@ -68,6 +75,15 @@ const osMessageQueueAttr_t Data_Holder_attributes = {
 /* USER CODE BEGIN PV */
 static int16_t adc_value = 0;
 char uart_buffer[32];
+
+#define UART_RX_BUFFER_SIZE 32
+uint8_t rx_buffer[UART_RX_BUFFER_SIZE];
+uint8_t rx_data[UART_RX_BUFFER_SIZE];
+uint8_t rx_index = 0;
+uint8_t command_received = 0;
+uint8_t handshake_complete = 0;
+uint32_t reading_duration = 0;  // in seconds
+uint32_t reading_count = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,6 +93,7 @@ static void MX_ADC1_Init(void);
 static void MX_USART1_UART_Init(void);
 void StartDefaultTask(void *argument);
 void StartTask02(void *argument);
+void StartCommandHandler(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -151,6 +168,9 @@ int main(void)
 
   /* creation of Send_Bpw34 */
   Send_Bpw34Handle = osThreadNew(StartTask02, NULL, &Send_Bpw34_attributes);
+
+  /* creation of Command_Handler */
+  Command_HandlerHandle = osThreadNew(StartCommandHandler, NULL, &Command_Handler_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -297,7 +317,7 @@ static void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-
+  HAL_UART_Receive_IT(&huart1, rx_data, 1);
   /* USER CODE END USART1_Init 2 */
 
 }
@@ -324,6 +344,32 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 /* USER CODE BEGIN 4 */
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  if (huart->Instance == USART1)
+  {
+    // Store received character
+    rx_buffer[rx_index++] = rx_data[0];
+
+    // Check for newline or carriage return (end of command)
+    if (rx_data[0] == '\n' || rx_data[0] == '\r')
+    {
+      rx_buffer[rx_index - 1] = '\0';  // Null terminate string
+      command_received = 1;
+      rx_index = 0;
+    }
+    else if (rx_index >= UART_RX_BUFFER_SIZE - 1)
+    {
+      // Buffer overflow, reset
+      rx_index = 0;
+    }
+
+    // Start next reception
+    HAL_UART_Receive_IT(&huart1, rx_data, 1);
+  }
+}
+
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
   /* Optional: Handle UART transmit complete */
@@ -349,20 +395,32 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  HAL_ADC_Start(&hadc1);
+	  if (reading_duration > 0 && reading_count < reading_duration)
+	      {
+	        HAL_ADC_Start(&hadc1);
 
-	  if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK){
+	        if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK)
+	        {
+	          adc_value = (int16_t)HAL_ADC_GetValue(&hadc1);
 
-		  adc_value = (int16_t)HAL_ADC_GetValue(&hadc1);
+	          status = osMessageQueuePut(
+	                    Data_HolderHandle,
+	                    &adc_value,
+	                    0,
+	                    0);
 
-		  status = osMessageQueuePut(
-		          Data_HolderHandle,
-		          &adc_value,
-		          0,
-		          0);
+	          reading_count++;  // Increment reading count
+	        }
+	        HAL_ADC_Stop(&hadc1);
 
-	  }
-	  HAL_ADC_Stop(&hadc1);
+	        // Check if we've completed the requested duration
+	        if (reading_count >= reading_duration)
+	        {
+	          char done_msg[] = "READING_COMPLETE\n";
+	          HAL_UART_Transmit(&huart1, (uint8_t*)done_msg, strlen(done_msg), 100);
+	          reading_duration = 0;  // Reset for next session
+	        }
+	      }
 
 	  osDelay(1000);
   }
@@ -388,7 +446,7 @@ void StartTask02(void *argument)
   {
 	  status = osMessageQueueGet(Data_HolderHandle, &received_value, NULL, osWaitForever);
 
-	  if (status == osOK){
+	  if (status == osOK && reading_duration > 0){
 			/* Option 1: Send as raw binary data (2 bytes) */
 			// tx_buffer[0] = (received_value >> 8) & 0xFF;  // High byte
 			// tx_buffer[1] = received_value & 0xFF;         // Low byte
@@ -405,6 +463,88 @@ void StartTask02(void *argument)
 
   }
   /* USER CODE END StartTask02 */
+}
+
+/* USER CODE BEGIN Header_StartCommandHandler */
+/**
+* @brief Function implementing the Command_Handler thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartCommandHandler */
+void StartCommandHandler(void *argument)
+{
+  /* USER CODE BEGIN StartCommandHandler */
+
+	char cmd_buffer[32];
+	uint32_t duration;
+  /* Infinite loop */
+  for(;;)
+  {
+
+	  if (command_received)
+	      {
+	        command_received = 0;
+	        strcpy(cmd_buffer, (char*)rx_buffer);
+
+	        // Check for "PING" command
+	        if (strncmp(cmd_buffer, "PING", 4) == 0)
+	        {
+	          // Send PONG response
+	          char response[] = "PONG\n";
+	          HAL_UART_Transmit(&huart1, (uint8_t*)response, strlen(response), 100);
+	          handshake_complete = 1;
+	        }
+	        // Check for duration command (format: "DURATION:10" for 10 seconds)
+	        else if (strncmp(cmd_buffer, "DURATION:", 9) == 0)
+	        {
+	          // Parse the duration value
+	          duration = atoi(cmd_buffer + 9);
+	          if (duration > 0 && duration <= 3600)  // Max 1 hour
+	          {
+	            reading_duration = duration;
+	            reading_count = 0;
+	            // Acknowledge the duration command
+	            char ack[32];
+	            snprintf(ack, sizeof(ack), "ACK:%lu\n", duration);
+	            HAL_UART_Transmit(&huart1, (uint8_t*)ack, strlen(ack), 100);
+	          }
+	          else
+	          {
+	            char error[] = "ERROR:Invalid duration\n";
+	            HAL_UART_Transmit(&huart1, (uint8_t*)error, strlen(error), 100);
+	          }
+	        }
+	        // Check for "START" command
+	        else if (strncmp(cmd_buffer, "START", 5) == 0)
+	        {
+	          if (handshake_complete && reading_duration > 0)
+	          {
+	            char start_msg[] = "START_READING\n";
+	            HAL_UART_Transmit(&huart1, (uint8_t*)start_msg, strlen(start_msg), 100);
+	            reading_count = 0;
+	          }
+	          else
+	          {
+	            char error[] = "ERROR:Handshake not complete or duration not set\n";
+	            HAL_UART_Transmit(&huart1, (uint8_t*)error, strlen(error), 100);
+	          }
+	        }
+	        else if (strncmp(cmd_buffer, "STOP", 4) == 0)
+	        {
+	          reading_duration = 0;
+	          char stop_msg[] = "STOPPED\n";
+	          HAL_UART_Transmit(&huart1, (uint8_t*)stop_msg, strlen(stop_msg), 100);
+	        }
+	        else
+	        {
+	          char error[] = "ERROR:Unknown command\n";
+	          HAL_UART_Transmit(&huart1, (uint8_t*)error, strlen(error), 100);
+	        }
+	      }
+    osDelay(10);
+  }
+  /* USER CODE END StartCommandHandler */
 }
 
 /**

@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Adafruit_AS7341.h"
+
+#include "LTR390.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,13 +44,30 @@
 
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c3;
 
-/* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
+UART_HandleTypeDef huart2;
+
+/* Definitions for AS7341_Send */
+osThreadId_t AS7341_SendHandle;
+const osThreadAttr_t AS7341_Send_attributes = {
+  .name = "AS7341_Send",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for Send_LTR390 */
+osThreadId_t Send_LTR390Handle;
+const osThreadAttr_t Send_LTR390_attributes = {
+  .name = "Send_LTR390",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for UartSend */
+osThreadId_t UartSendHandle;
+const osThreadAttr_t UartSend_attributes = {
+  .name = "UartSend",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for messageI2C1_Lock */
 osSemaphoreId_t messageI2C1_LockHandle;
@@ -58,13 +77,19 @@ const osSemaphoreAttr_t messageI2C1_Lock_attributes = {
 /* USER CODE BEGIN PV */
 Adafruit_AS7341_t as7341;
 uint16_t spectral[12];
+
+volatile uint32_t uv340 = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
-void StartDefaultTask(void *argument);
+static void MX_I2C3_Init(void);
+static void MX_USART2_UART_Init(void);
+void StartAS7341Task(void *argument);
+void StartLTR390(void *argument);
+void SendUART(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -105,6 +130,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
+  MX_I2C3_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -121,7 +148,6 @@ int main(void)
   messageI2C1_LockHandle = osSemaphoreNew(1, 1, &messageI2C1_Lock_attributes);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-
   Adafruit_AS7341_Init(&as7341);
 
   if(!Adafruit_AS7341_begin(&as7341,
@@ -147,8 +173,14 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  /* creation of AS7341_Send */
+  AS7341_SendHandle = osThreadNew(StartAS7341Task, NULL, &AS7341_Send_attributes);
+
+  /* creation of Send_LTR390 */
+  Send_LTR390Handle = osThreadNew(StartLTR390, NULL, &Send_LTR390_attributes);
+
+  /* creation of UartSend */
+  UartSendHandle = osThreadNew(SendUART, NULL, &UartSend_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -250,6 +282,73 @@ static void MX_I2C1_Init(void)
 }
 
 /**
+  * @brief I2C3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C3_Init(void)
+{
+
+  /* USER CODE BEGIN I2C3_Init 0 */
+
+  /* USER CODE END I2C3_Init 0 */
+
+  /* USER CODE BEGIN I2C3_Init 1 */
+
+  /* USER CODE END I2C3_Init 1 */
+  hi2c3.Instance = I2C3;
+  hi2c3.Init.ClockSpeed = 100000;
+  hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c3.Init.OwnAddress1 = 0;
+  hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c3.Init.OwnAddress2 = 0;
+  hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C3_Init 2 */
+
+  /* USER CODE END I2C3_Init 2 */
+
+}
+
+/**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -273,40 +372,101 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_StartAS7341Task */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the AS7341_Send thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+/* USER CODE END Header_StartAS7341Task */
+void StartAS7341Task(void *argument)
 {
   /* USER CODE BEGIN 5 */
+	uint32_t ticks = osKernelGetTickCount();
   /* Infinite loop */
 	for(;;)
-		{
-			if(Adafruit_AS7341_readAllChannels(&as7341, spectral))
-		    {
-		        // spectral[] now contains:
+			{
+				if(Adafruit_AS7341_readAllChannels(&as7341, spectral))
+			    {
+			        // spectral[] now contains:
 
-		        // spectral[0] = F1 (415nm)
-		        // spectral[1] = F2 (445nm)
-		        // spectral[2] = F3 (480nm)
-		        // spectral[3] = F4 (515nm)
-		        // spectral[4] = Clear0
-		        // spectral[5] = NIR0
-		        // spectral[6] = F5 (555nm)
-		        // spectral[7] = F6 (590nm)
-		        // spectral[8] = F7 (630nm)
-		        // spectral[9] = F8 (680nm)
-		        // spectral[10] = Clear1
-		        // spectral[11] = NIR1
-		    }
+			        // spectral[0] = F1 (415nm)
+			        // spectral[1] = F2 (445nm)
+			        // spectral[2] = F3 (480nm)
+			        // spectral[3] = F4 (515nm)
+			        // spectral[4] = Clear0
+			        // spectral[5] = NIR0
+			        // spectral[6] = F5 (555nm)
+			        // spectral[7] = F6 (590nm)
+			        // spectral[8] = F7 (630nm)
+			        // spectral[9] = F8 (680nm)
+			        // spectral[10] = Clear1
+			        // spectral[11] = NIR1
+			    }
 
-		    osDelay(1000);
-		}
+		        ticks += 1000;           // Next wake-up time (1000 ms later)
+		        osDelayUntil(ticks);     // Wait until that absolute tick
+			}
   /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_StartLTR390 */
+/**
+* @brief Function implementing the Send_LTR390 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartLTR390 */
+void StartLTR390(void *argument)
+{
+  /* USER CODE BEGIN StartLTR390 */
+  /* Infinite loop */
+	LTR390_HandleTypeDef ltr;
+
+	    LTR390_Init(&ltr, &hi2c3);
+
+	    if(!LTR390_Begin(&ltr))
+	    {
+	        Error_Handler();
+	    }
+
+	    LTR390_SetMode(&ltr, LTR390_MODE_UVS);
+	    LTR390_SetGain(&ltr, LTR390_GAIN_18);
+	    LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);
+
+	    uint32_t ticks = osKernelGetTickCount();
+
+	    for (;;)
+	    {
+	        if (LTR390_NewDataAvailable(&ltr))
+	        {
+	            uv340 = LTR390_ReadUVS(&ltr);
+	        }
+
+
+	        ticks += 1000;           // Next wake-up time (1000 ms later)
+	        osDelayUntil(ticks);     // Wait until that absolute tick
+	    }
+
+  /* USER CODE END StartLTR390 */
+}
+
+/* USER CODE BEGIN Header_SendUART */
+/**
+* @brief Function implementing the UartSend thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_SendUART */
+void SendUART(void *argument)
+{
+  /* USER CODE BEGIN SendUART */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END SendUART */
 }
 
 /**

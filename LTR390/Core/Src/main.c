@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "Adafruit_AS7341.h"
+#include "LTR390.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,7 +41,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c3;
 
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -50,20 +50,14 @@ const osThreadAttr_t defaultTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for messageI2C1_Lock */
-osSemaphoreId_t messageI2C1_LockHandle;
-const osSemaphoreAttr_t messageI2C1_Lock_attributes = {
-  .name = "messageI2C1_Lock"
-};
 /* USER CODE BEGIN PV */
-Adafruit_AS7341_t as7341;
-uint16_t spectral[12];
+volatile uint32_t uv340 = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_I2C1_Init(void);
+static void MX_I2C3_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -104,7 +98,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_I2C1_Init();
+  MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -116,25 +110,7 @@ int main(void)
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
-  /* Create the semaphores(s) */
-  /* creation of messageI2C1_Lock */
-  messageI2C1_LockHandle = osSemaphoreNew(1, 1, &messageI2C1_Lock_attributes);
-
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-
-  Adafruit_AS7341_Init(&as7341);
-
-  if(!Adafruit_AS7341_begin(&as7341,
-                            AS7341_I2CADDR_DEFAULT,
-                            &hi2c1,
-                            0))
-  {
-      Error_Handler();
-  }
-
-  Adafruit_AS7341_setATIME(&as7341, 50);
-  Adafruit_AS7341_setASTEP(&as7341, 999);
-  Adafruit_AS7341_setGain(&as7341, AS7341_GAIN_16X);
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
@@ -216,36 +192,36 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief I2C1 Initialization Function
+  * @brief I2C3 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_I2C1_Init(void)
+static void MX_I2C3_Init(void)
 {
 
-  /* USER CODE BEGIN I2C1_Init 0 */
+  /* USER CODE BEGIN I2C3_Init 0 */
 
-  /* USER CODE END I2C1_Init 0 */
+  /* USER CODE END I2C3_Init 0 */
 
-  /* USER CODE BEGIN I2C1_Init 1 */
+  /* USER CODE BEGIN I2C3_Init 1 */
 
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
-  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  /* USER CODE END I2C3_Init 1 */
+  hi2c3.Instance = I2C3;
+  hi2c3.Init.ClockSpeed = 100000;
+  hi2c3.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c3.Init.OwnAddress1 = 0;
+  hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c3.Init.OwnAddress2 = 0;
+  hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c3) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN I2C1_Init 2 */
+  /* USER CODE BEGIN I2C3_Init 2 */
 
-  /* USER CODE END I2C1_Init 2 */
+  /* USER CODE END I2C3_Init 2 */
 
 }
 
@@ -284,28 +260,33 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-	for(;;)
-		{
-			if(Adafruit_AS7341_readAllChannels(&as7341, spectral))
-		    {
-		        // spectral[] now contains:
+//  for(;;)
+//  {
+//    osDelay(1);
+//  }/
 
-		        // spectral[0] = F1 (415nm)
-		        // spectral[1] = F2 (445nm)
-		        // spectral[2] = F3 (480nm)
-		        // spectral[3] = F4 (515nm)
-		        // spectral[4] = Clear0
-		        // spectral[5] = NIR0
-		        // spectral[6] = F5 (555nm)
-		        // spectral[7] = F6 (590nm)
-		        // spectral[8] = F7 (630nm)
-		        // spectral[9] = F8 (680nm)
-		        // spectral[10] = Clear1
-		        // spectral[11] = NIR1
-		    }
+	LTR390_HandleTypeDef ltr;
 
-		    osDelay(1000);
-		}
+	    LTR390_Init(&ltr, &hi2c3);
+
+	    if(!LTR390_Begin(&ltr))
+	    {
+	        Error_Handler();
+	    }
+
+	    LTR390_SetMode(&ltr, LTR390_MODE_UVS);
+	    LTR390_SetGain(&ltr, LTR390_GAIN_18);
+	    LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);
+
+	    for (;;)
+	    {
+	        if (LTR390_NewDataAvailable(&ltr))
+	        {
+	            uv340 = LTR390_ReadUVS(&ltr);
+	        }
+
+	        osDelay(1000);
+	    }
   /* USER CODE END 5 */
 }
 

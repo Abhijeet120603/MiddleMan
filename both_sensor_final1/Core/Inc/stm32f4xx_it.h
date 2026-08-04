@@ -52,6 +52,8 @@ void MemManage_Handler(void);
 void BusFault_Handler(void);
 void UsageFault_Handler(void);
 void DebugMon_Handler(void);
+void TIM2_IRQHandler(void);
+void TIM3_IRQHandler(void);
 void TIM4_IRQHandler(void);
 void I2C1_EV_IRQHandler(void);
 void I2C1_ER_IRQHandler(void);

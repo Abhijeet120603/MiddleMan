@@ -1060,6 +1060,7 @@ void SendUART(void *argument)
 void StartStepperHome(void *argument)
 {
   /* USER CODE BEGIN StartStepperHome */
+
   /* Infinite loop */
     for(;;)
     {
@@ -1153,6 +1154,7 @@ void White_Led(void *argument)
 void UV_Led(void *argument)
 {
   /* USER CODE BEGIN UV_Led */
+	Stepper_UV_Sensor_Align();
   /* Infinite loop */
     for(;;)
     {

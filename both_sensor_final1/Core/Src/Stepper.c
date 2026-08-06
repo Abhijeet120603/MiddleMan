@@ -325,22 +325,26 @@ void Stepper_Home(void)
 
     // Enable driver
     Stepper_Enable();
+    Stepper_SetMicrostepping(MICROSTEP_SIXTEENTH);
     osDelay(10);
 
     // Move negative until groove sensor is detected
     // Max 5000 steps as safety limit
-    uint8_t groove_found = Stepper_MoveUntilGroove(NEGATIVE, step_frequency, 5000);
+    uint8_t groove_found = Stepper_MoveUntilGroove(POSITIVE, step_frequency, 5000);
 
     if(groove_found)
     {
         // Groove detected - move positive for 500 steps
         osDelay(100);  // Small delay to settle
-        Stepper_MovePositive(500, step_frequency);
+        Stepper_Enable();
+        Stepper_MoveNegative(300, step_frequency);
     }
     else
     {
+    	Stepper_Enable();
         // Groove not found - move to safe position (move positive 1000 steps)
         Stepper_MovePositive(1000, step_frequency);
+
     }
 
     // Disable driver
@@ -362,10 +366,11 @@ void Stepper_UV_Sensor_Align(void)
 
     // Enable driver
     Stepper_Enable();
+    Stepper_SetMicrostepping(MICROSTEP_SIXTEENTH);
     osDelay(10);
 
     // Move forward 100 steps at 500 Hz
-    Stepper_MovePositive(100, 500);
+    Stepper_MoveNegative(280, 500);
 
     // Disable driver
     Stepper_Disable();
@@ -386,6 +391,7 @@ void Stepper_White_LED_Align(void)
 
     // Enable driver
     Stepper_Enable();
+    Stepper_SetMicrostepping(MICROSTEP_SIXTEENTH);
     osDelay(10);
 
     // Move forward 200 steps at 500 Hz

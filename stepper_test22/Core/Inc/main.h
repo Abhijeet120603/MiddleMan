@@ -90,7 +90,7 @@ typedef enum {
 void Stepper_Enable(void);
 void Stepper_Disable(void);
 void Move_Stepper(StepperDirection_t dir, uint32_t duration_ms, uint32_t step_frequency);
-void Set_Microstepping(MicrostepMode_t mode);
+//void Set_Microstepping(MicrostepMode_t mode);
 
 /* USER CODE END Private defines */
 

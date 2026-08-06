@@ -101,8 +101,8 @@ int main(void)
 //  HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_RESET);
 
   // Set microstepping (Full Step)
-//  HAL_GPIO_WritePin(MS1_GPIO_Port, MS1_Pin, GPIO_PIN_RESET);
-//  HAL_GPIO_WritePin(MS2_GPIO_Port, MS2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(MS1_GPIO_Port, MS1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(MS2_GPIO_Port, MS2_Pin, GPIO_PIN_SET);
 
   // Start STEP pulses
 //  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
@@ -321,42 +321,42 @@ void Stepper_Disable(void)
     HAL_GPIO_WritePin(En_GPIO_Port, En_Pin, GPIO_PIN_SET);
 }
 
-void Set_Microstepping(MicrostepMode_t mode)
-{
-    // MS1 and MS2 control microstepping on most drivers
-    // MS2 | MS1 | Microstepping
-    //  L  |  L  | Full step
-    //  L  |  H  | Half step
-    //  H  |  L  | Quarter step (A4988) / 1/8 (DRV8825)
-    //  H  |  H  | 1/16 (A4988) / 1/32 (DRV8825)
-
-    GPIO_PinState ms1_state;
-    GPIO_PinState ms2_state;
-
-    switch(mode) {
-        case MICROSTEP_FULL:
-            ms1_state = GPIO_PIN_RESET;
-            ms2_state = GPIO_PIN_RESET;
-            break;
-        case MICROSTEP_HALF:
-            ms1_state = GPIO_PIN_SET;
-            ms2_state = GPIO_PIN_RESET;
-            break;
-        case MICROSTEP_QUARTER:
-            ms1_state = GPIO_PIN_RESET;
-            ms2_state = GPIO_PIN_SET;
-            break;
-        case MICROSTEP_EIGHTH:
-        case MICROSTEP_SIXTEENTH:
-        default:
-            ms1_state = GPIO_PIN_SET;
-            ms2_state = GPIO_PIN_SET;
-            break;
-    }
-
-    HAL_GPIO_WritePin(MS1_GPIO_Port, MS1_Pin, ms1_state);
-    HAL_GPIO_WritePin(MS2_GPIO_Port, MS2_Pin, ms2_state);
-}
+//void Set_Microstepping(MicrostepMode_t mode)
+//{
+//    // MS1 and MS2 control microstepping on most drivers
+//    // MS2 | MS1 | Microstepping
+//    //  L  |  L  | Full step
+//    //  L  |  H  | Half step
+//    //  H  |  L  | Quarter step (A4988) / 1/8 (DRV8825)
+//    //  H  |  H  | 1/16 (A4988) / 1/32 (DRV8825)
+//
+//    GPIO_PinState ms1_state;
+//    GPIO_PinState ms2_state;
+//
+//    switch(mode) {
+//        case MICROSTEP_FULL:
+//            ms1_state = GPIO_PIN_RESET;
+//            ms2_state = GPIO_PIN_RESET;
+//            break;
+//        case MICROSTEP_HALF:
+//            ms1_state = GPIO_PIN_SET;
+//            ms2_state = GPIO_PIN_RESET;
+//            break;
+//        case MICROSTEP_QUARTER:
+//            ms1_state = GPIO_PIN_RESET;
+//            ms2_state = GPIO_PIN_SET;
+//            break;
+//        case MICROSTEP_EIGHTH:
+//        case MICROSTEP_SIXTEENTH:
+//        default:
+//            ms1_state = GPIO_PIN_SET;
+//            ms2_state = GPIO_PIN_SET;
+//            break;
+//    }
+//
+//    HAL_GPIO_WritePin(MS1_GPIO_Port, MS1_Pin, ms1_state);
+//    HAL_GPIO_WritePin(MS2_GPIO_Port, MS2_Pin, ms2_state);
+//}
 /* USER CODE END 4 */
 
 /**

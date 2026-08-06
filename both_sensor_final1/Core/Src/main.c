@@ -135,6 +135,9 @@ uint8_t rxIndex = 0;
 //volatile uint32_t duration = 0;
 
 volatile UART_Command_t uartCmd = {0};
+
+uint8_t AS7341_Present = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -212,19 +215,8 @@ int main(void)
   messageI2C1_LockHandle = osSemaphoreNew(1, 1, &messageI2C1_Lock_attributes);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  Adafruit_AS7341_Init(&as7341);
 
-  if(!Adafruit_AS7341_begin(&as7341,
-                            AS7341_I2CADDR_DEFAULT,
-                            &hi2c1,
-                            0))
-  {
-      Error_Handler();
-  }
 
-  Adafruit_AS7341_setATIME(&as7341, 50);
-  Adafruit_AS7341_setASTEP(&as7341, 999);
-  Adafruit_AS7341_setGain(&as7341, AS7341_GAIN_16X);
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
@@ -585,96 +577,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-//{
-//    if (huart->Instance == USART1)
-//    {
-//        if (rxByte == '\r' || rxByte == '\n')
-//        {
-//            // Only process if we have data
-//            if (rxIndex > 0)
-//            {
-//                rxBuffer[rxIndex] = '\0';
-//
-//                // Trim trailing newline if present
-//                if (rxBuffer[rxIndex - 1] == '\n')
-//                {
-//                    rxBuffer[rxIndex - 1] = '\0';
-//                }
-//
-//                if (strcmp(rxBuffer, "PING") == 0)
-//                {
-//                    HAL_UART_Transmit(&huart1,
-//                                      (uint8_t *)"PONG\r\n",
-//                                      6,
-//                                      HAL_MAX_DELAY);
-//                }
-//                else
-//                {
-//                    char sensor[20];
-//                    int sec;
-//                    int incubate;
-//
-//                    // Try parsing with 3 parameters: sensor,duration,incubation
-//                    if (sscanf(rxBuffer, "%[^,],%d,%d", sensor, &sec, &incubate) == 3)
-//                    {
-//                        if (strcmp(sensor, "AS7341") == 0)
-//                        {
-//                            uartCmd.sensor = SENSOR_AS7341;
-//                            uartCmd.duration = sec;
-//                            uartCmd.incubation = incubate;
-//                            uartCmd.start = 1;
-//                        }
-//                        else if (strcmp(sensor, "LTR390") == 0)
-//                        {
-//                            uartCmd.sensor = SENSOR_LTR390;
-//                            uartCmd.duration = sec;
-//                            uartCmd.incubation = incubate;
-//                            uartCmd.start = 1;
-//                        }
-//                    }
-//                    // Fallback to 2 parameters for backward compatibility
-//                    else if (sscanf(rxBuffer, "%[^,],%d", sensor, &sec) == 2)
-//                    {
-//                        if (strcmp(sensor, "AS7341") == 0)
-//                        {
-//                            uartCmd.sensor = SENSOR_AS7341;
-//                            uartCmd.duration = sec;
-//                            uartCmd.incubation = 0;  // No incubation
-//                            uartCmd.start = 1;
-//                        }
-//                        else if (strcmp(sensor, "LTR390") == 0)
-//                        {
-//                            uartCmd.sensor = SENSOR_LTR390;
-//                            uartCmd.duration = sec;
-//                            uartCmd.incubation = 0;  // No incubation
-//                            uartCmd.start = 1;
-//                        }
-//                    }
-//                }
-//
-//                // Reset buffer for next command
-//                rxIndex = 0;
-//                memset(rxBuffer, 0, sizeof(rxBuffer));
-//            }
-//        }
-//        else if (rxByte != '\r' && rxByte != '\n')
-//        {
-//            if (rxIndex < sizeof(rxBuffer) - 1)
-//            {
-//                rxBuffer[rxIndex++] = rxByte;
-//            }
-//            else
-//            {
-//                // Buffer overflow - reset
-//                rxIndex = 0;
-//                memset(rxBuffer, 0, sizeof(rxBuffer));
-//            }
-//        }
-//
-//        HAL_UART_Receive_IT(&huart1, &rxByte, 1);
-//    }
-//}
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -851,11 +753,70 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 /* USER CODE END Header_StartAS7341Task */
 void StartAS7341Task(void *argument)
 {
+
   /* USER CODE BEGIN 5 */
   for(;;)
   {
       if(uartCmd.start && uartCmd.sensor == SENSOR_AS7341)
       {
+
+    	  HAL_I2C_DeInit(&hi2c1);
+    	  HAL_Delay(5);
+    	  HAL_I2C_Init(&hi2c1);
+
+    	  if (HAL_I2C_IsDeviceReady(&hi2c1,
+    	                            AS7341_I2CADDR_DEFAULT << 1,
+    	                            5,
+    	                            100) != HAL_OK)
+    	  {
+    	      HAL_UART_Transmit(&huart1,
+    	                        (uint8_t *)"AS7341 NOT FOUND\r\n",
+    	                        19,
+    	                        HAL_MAX_DELAY);
+
+    	      uartCmd.start = 0;
+    	      uartCmd.sensor = SENSOR_NONE;
+    	      continue;
+    	  }
+
+    	  Adafruit_AS7341_Init(&as7341);
+
+    	  if (!Adafruit_AS7341_begin(&as7341,
+    	                             AS7341_I2CADDR_DEFAULT,
+    	                             &hi2c1,
+    	                             0))
+    	  {
+    	      HAL_UART_Transmit(&huart1,
+    	                        (uint8_t *)"AS7341 INIT FAILED\r\n",
+    	                        20,
+    	                        HAL_MAX_DELAY);
+
+    	      uartCmd.start = 0;
+    	      uartCmd.sensor = SENSOR_NONE;
+    	      continue;
+    	  }
+
+    	  /* Sensor is connected - initialize it again */
+    	  Adafruit_AS7341_Init(&as7341);
+
+    	  if (!Adafruit_AS7341_begin(&as7341,
+    	                             AS7341_I2CADDR_DEFAULT,
+    	                             &hi2c1,
+    	                             0))
+    	  {
+    	      HAL_UART_Transmit(&huart1,
+    	                        (uint8_t *)"AS7341 INIT FAILED\r\n",
+    	                        20,
+    	                        HAL_MAX_DELAY);
+
+    	      uartCmd.start = 0;
+    	      uartCmd.sensor = SENSOR_NONE;
+    	      continue;
+    	  }
+
+    	  Adafruit_AS7341_setATIME(&as7341, 50);
+    	  Adafruit_AS7341_setASTEP(&as7341, 999);
+    	  Adafruit_AS7341_setGain(&as7341, AS7341_GAIN_16X);
           // Ensure LED is off initially
           ControlWhiteLED(LED_OFF);
 
@@ -946,17 +907,52 @@ void StartLTR390(void *argument)
 
   if(!LTR390_Begin(&ltr))
   {
-      Error_Handler();
+	  osDelay(1);
+//      Error_Handler();
+
   }
 
-  LTR390_SetMode(&ltr, LTR390_MODE_UVS);
-  LTR390_SetGain(&ltr, LTR390_GAIN_18);
-  LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);
+//  LTR390_SetMode(&ltr, LTR390_MODE_UVS);
+//  LTR390_SetGain(&ltr, LTR390_GAIN_18);
+//  LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);
 
   for(;;)
   {
       if(uartCmd.start && uartCmd.sensor == SENSOR_LTR390)
       {
+    	  if (HAL_I2C_IsDeviceReady(&hi2c3,
+    	                            0X53 << 1,
+    	                            2,
+    	                            100) != HAL_OK)
+    	  {
+    	      HAL_UART_Transmit(&huart1,
+    	                        (uint8_t *)"LTR390 NOT FOUND\r\n",
+    	                        19,
+    	                        HAL_MAX_DELAY);
+
+    	      uartCmd.start = 0;
+    	      uartCmd.sensor = SENSOR_NONE;
+    	      continue;
+    	  }
+
+    	  /* Reinitialize every time */
+    	  LTR390_Init(&ltr, &hi2c3);
+
+    	  if (!LTR390_Begin(&ltr))
+    	  {
+    	      HAL_UART_Transmit(&huart1,
+    	                        (uint8_t *)"LTR390 INIT FAILED\r\n",
+    	                        20,
+    	                        HAL_MAX_DELAY);
+
+    	      uartCmd.start = 0;
+    	      uartCmd.sensor = SENSOR_NONE;
+    	      continue;
+    	  }
+
+    	  LTR390_SetMode(&ltr, LTR390_MODE_UVS);
+    	  LTR390_SetGain(&ltr, LTR390_GAIN_18);
+    	  LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);
           // Ensure UV LED is off initially
           HAL_GPIO_WritePin(UV_LED_GPIO_Port, UV_LED_Pin, GPIO_PIN_RESET);
 

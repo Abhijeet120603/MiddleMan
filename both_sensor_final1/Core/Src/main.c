@@ -115,6 +115,18 @@ const osThreadAttr_t Aspirate_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for Command_Dispatc */
+osThreadId_t Command_DispatcHandle;
+const osThreadAttr_t Command_Dispatc_attributes = {
+  .name = "Command_Dispatc",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityAboveNormal,
+};
+/* Definitions for commandQueue */
+osMessageQueueId_t commandQueueHandle;
+const osMessageQueueAttr_t commandQueue_attributes = {
+  .name = "commandQueue"
+};
 /* Definitions for messageI2C1_Lock */
 osSemaphoreId_t messageI2C1_LockHandle;
 const osSemaphoreAttr_t messageI2C1_Lock_attributes = {
@@ -155,6 +167,7 @@ void StartStepperHome(void *argument);
 void White_Led(void *argument);
 void UV_Led(void *argument);
 void Aspirate_Sample(void *argument);
+void Command_Dispatcher(void *argument);
 
 /* USER CODE BEGIN PFP */
 void ControlWhiteLED(uint8_t state);
@@ -224,6 +237,10 @@ int main(void)
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
+  /* Create the queue(s) */
+  /* creation of commandQueue */
+  commandQueueHandle = osMessageQueueNew (16, sizeof(uint16_t), &commandQueue_attributes);
+
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
@@ -249,6 +266,9 @@ int main(void)
 
   /* creation of Aspirate */
   AspirateHandle = osThreadNew(Aspirate_Sample, NULL, &Aspirate_attributes);
+
+  /* creation of Command_Dispatc */
+  Command_DispatcHandle = osThreadNew(Command_Dispatcher, NULL, &Command_Dispatc_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -398,7 +418,6 @@ static void MX_TIM2_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM2_Init 1 */
 
@@ -418,28 +437,15 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 500;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
-  HAL_TIM_MspPostInit(&htim2);
 
 }
 
@@ -546,13 +552,18 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, EN_Pin|DIR_Pin|MS1_Pin|MS2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, STEP_Pin|DIR_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, EN_Pin|MS1_Pin|MS2_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, White_LED_Pin|UV_LED_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : EN_Pin DIR_Pin MS1_Pin MS2_Pin */
-  GPIO_InitStruct.Pin = EN_Pin|DIR_Pin|MS1_Pin|MS2_Pin;
+  /*Configure GPIO pins : STEP_Pin EN_Pin DIR_Pin MS1_Pin
+                           MS2_Pin */
+  GPIO_InitStruct.Pin = STEP_Pin|EN_Pin|DIR_Pin|MS1_Pin
+                          |MS2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -738,10 +749,10 @@ void ControlWhiteLED(uint8_t state)
 }
 
 
-void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
-{
-    Stepper_TimerPulseFinishedCallback(htim);
-}
+//void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+//{
+//    Stepper_TimerPulseFinishedCallback(htim);
+//}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartAS7341Task */
@@ -753,7 +764,6 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
 /* USER CODE END Header_StartAS7341Task */
 void StartAS7341Task(void *argument)
 {
-
   /* USER CODE BEGIN 5 */
   for(;;)
   {
@@ -1056,7 +1066,7 @@ void SendUART(void *argument)
 void StartStepperHome(void *argument)
 {
   /* USER CODE BEGIN StartStepperHome */
-
+//	Stepper_Home();
   /* Infinite loop */
     for(;;)
     {
@@ -1067,23 +1077,7 @@ void StartStepperHome(void *argument)
 
             // Call your stepper home function
             Stepper_Home();
-            // Stepper_Home();  // You need to implement this
 
-            // For demonstration, just simulate the operation
-            // Replace with actual stepper homing logic
-            // For example:
-            /*
-            Stepper_Enable();
-            Stepper_SetDirection(DIR_REVERSE);
-            while(!Stepper_IsGrooveDetected())
-            {
-                Stepper_Step();
-                osDelay(1);
-            }
-            Stepper_SetDirection(DIR_FORWARD);
-            Stepper_Step_Count(100);  // Move forward a bit from home
-            Stepper_Disable();
-            */
 
             HAL_UART_Transmit(&huart1, (uint8_t *)"STEPPER HOME COMPLETE\r\n", 24, HAL_MAX_DELAY);
 
@@ -1119,15 +1113,6 @@ void White_Led(void *argument)
             // - Turn on white LED
             Stepper_White_LED_Align();
 
-            // - Move stepper to align LED
-            // Stepper_Step_Count(100);
-
-            // - Take measurements
-            // Adafruit_AS7341_take10ChannelReadings(&as7341, spectral);
-
-            // Send results back via UART
-
-
 
             HAL_UART_Transmit(&huart1, (uint8_t *)"WHITE LED ALIGN COMPLETE\r\n", 27, HAL_MAX_DELAY);
 
@@ -1150,7 +1135,7 @@ void White_Led(void *argument)
 void UV_Led(void *argument)
 {
   /* USER CODE BEGIN UV_Led */
-	Stepper_UV_Sensor_Align();
+//	Stepper_UV_Sensor_Align();
   /* Infinite loop */
     for(;;)
     {
@@ -1159,21 +1144,7 @@ void UV_Led(void *argument)
             // Send acknowledgment
             HAL_UART_Transmit(&huart1, (uint8_t *)"UV LED ALIGN START\r\n", 21, HAL_MAX_DELAY);
 
-            // Add your UV LED alignment logic here
-            // For example:
             Stepper_UV_Sensor_Align();
-
-            // Move stepper to align UV LED
-            // Stepper_Step_Count(100);
-
-            // Take UV measurements
-            // if (LTR390_NewDataAvailable(&ltr))
-            // {
-            //     uv340 = LTR390_ReadUVS(&ltr);
-            //     // Send measurements via UART
-            // }
-
-
 
             HAL_UART_Transmit(&huart1, (uint8_t *)"UV LED ALIGN COMPLETE\r\n", 24, HAL_MAX_DELAY);
 
@@ -1235,6 +1206,24 @@ void Aspirate_Sample(void *argument)
         osDelay(10);
     }
   /* USER CODE END Aspirate_Sample */
+}
+
+/* USER CODE BEGIN Header_Command_Dispatcher */
+/**
+* @brief Function implementing the Command_Dispatc thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Command_Dispatcher */
+void Command_Dispatcher(void *argument)
+{
+  /* USER CODE BEGIN Command_Dispatcher */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Command_Dispatcher */
 }
 
 /**

@@ -1,0 +1,265 @@
+[33mcommit de51ac3afd9cd458acb0d76a2e533bb22030dd30[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Thu Aug 6 15:24:39 2026 +0530
+
+    sensor_if not detected then gives error
+
+[1mdiff --git a/both_sensor_final1/Core/Src/main.c b/both_sensor_final1/Core/Src/main.c[m
+[1mindex f54dab5..93741f1 100644[m
+[1m--- a/both_sensor_final1/Core/Src/main.c[m
+[1m+++ b/both_sensor_final1/Core/Src/main.c[m
+[36m@@ -135,6 +135,9 @@[m [muint8_t rxIndex = 0;[m
+ //volatile uint32_t duration = 0;[m
+ [m
+ volatile UART_Command_t uartCmd = {0};[m
+[32m+[m
+[32m+[m[32muint8_t AS7341_Present = 0;[m
+[32m+[m
+ /* USER CODE END PV */[m
+ [m
+ /* Private function prototypes -----------------------------------------------*/[m
+[36m@@ -212,19 +215,8 @@[m [mint main(void)[m
+   messageI2C1_LockHandle = osSemaphoreNew(1, 1, &messageI2C1_Lock_attributes);[m
+ [m
+   /* USER CODE BEGIN RTOS_SEMAPHORES */[m
+[31m-  Adafruit_AS7341_Init(&as7341);[m
+ [m
+[31m-  if(!Adafruit_AS7341_begin(&as7341,[m
+[31m-                            AS7341_I2CADDR_DEFAULT,[m
+[31m-                            &hi2c1,[m
+[31m-                            0))[m
+[31m-  {[m
+[31m-      Error_Handler();[m
+[31m-  }[m
+ [m
+[31m-  Adafruit_AS7341_setATIME(&as7341, 50);[m
+[31m-  Adafruit_AS7341_setASTEP(&as7341, 999);[m
+[31m-  Adafruit_AS7341_setGain(&as7341, AS7341_GAIN_16X);[m
+   /* add semaphores, ... */[m
+   /* USER CODE END RTOS_SEMAPHORES */[m
+ [m
+[36m@@ -585,96 +577,6 @@[m [mstatic void MX_GPIO_Init(void)[m
+ }[m
+ [m
+ /* USER CODE BEGIN 4 */[m
+[31m-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)[m
+[31m-//{[m
+[31m-//    if (huart->Instance == USART1)[m
+[31m-//    {[m
+[31m-//        if (rxByte == '\r' || rxByte == '\n')[m
+[31m-//        {[m
+[31m-//            // Only process if we have data[m
+[31m-//            if (rxIndex > 0)[m
+[31m-//            {[m
+[31m-//                rxBuffer[rxIndex] = '\0';[m
+[31m-//[m
+[31m-//                // Trim trailing newline if present[m
+[31m-//                if (rxBuffer[rxIndex - 1] == '\n')[m
+[31m-//                {[m
+[31m-//                    rxBuffer[rxIndex - 1] = '\0';[m
+[31m-//                }[m
+[31m-//[m
+[31m-//                if (strcmp(rxBuffer, "PING") == 0)[m
+[31m-//                {[m
+[31m-//                    HAL_UART_Transmit(&huart1,[m
+[31m-//                                      (uint8_t *)"PONG\r\n",[m
+[31m-//                                      6,[m
+[31m-//                                      HAL_MAX_DELAY);[m
+[31m-//                }[m
+[31m-//                else[m
+[31m-//                {[m
+[31m-//                    char sensor[20];[m
+[31m-//                    int sec;[m
+[31m-//                    int incubate;[m
+[31m-//[m
+[31m-//                    // Try parsing with 3 parameters: sensor,duration,incubation[m
+[31m-//                    if (sscanf(rxBuffer, "%[^,],%d,%d", sensor, &sec, &incubate) == 3)[m
+[31m-//                    {[m
+[31m-//                        if (strcmp(sensor, "AS7341") == 0)[m
+[31m-//                        {[m
+[31m-//                            uartCmd.sensor = SENSOR_AS7341;[m
+[31m-//                            uartCmd.duration = sec;[m
+[31m-//                            uartCmd.incubation = incubate;[m
+[31m-//                            uartCmd.start = 1;[m
+[31m-//                        }[m
+[31m-//                        else if (strcmp(sensor, "LTR390") == 0)[m
+[31m-//                        {[m
+[31m-//                            uartCmd.sensor = SENSOR_LTR390;[m
+[31m-//                            uartCmd.duration = sec;[m
+[31m-//                            uartCmd.incubation = incubate;[m
+[31m-//                            uartCmd.start = 1;[m
+[31m-//                        }[m
+[31m-//                    }[m
+[31m-//                    // Fallback to 2 parameters for backward compatibility[m
+[31m-//                    else if (sscanf(rxBuffer, "%[^,],%d", sensor, &sec) == 2)[m
+[31m-//                    {[m
+[31m-//                        if (strcmp(sensor, "AS7341") == 0)[m
+[31m-//                        {[m
+[31m-//                            uartCmd.sensor = SENSOR_AS7341;[m
+[31m-//                            uartCmd.duration = sec;[m
+[31m-//                            uartCmd.incubation = 0;  // No incubation[m
+[31m-//                            uartCmd.start = 1;[m
+[31m-//                        }[m
+[31m-//                        else if (strcmp(sensor, "LTR390") == 0)[m
+[31m-//                        {[m
+[31m-//                            uartCmd.sensor = SENSOR_LTR390;[m
+[31m-//                            uartCmd.duration = sec;[m
+[31m-//                            uartCmd.incubation = 0;  // No incubation[m
+[31m-//                            uartCmd.start = 1;[m
+[31m-//                        }[m
+[31m-//                    }[m
+[31m-//                }[m
+[31m-//[m
+[31m-//                // Reset buffer for next command[m
+[31m-//                rxIndex = 0;[m
+[31m-//                memset(rxBuffer, 0, sizeof(rxBuffer));[m
+[31m-//            }[m
+[31m-//        }[m
+[31m-//        else if (rxByte != '\r' && rxByte != '\n')[m
+[31m-//        {[m
+[31m-//            if (rxIndex < sizeof(rxBuffer) - 1)[m
+[31m-//            {[m
+[31m-//                rxBuffer[rxIndex++] = rxByte;[m
+[31m-//            }[m
+[31m-//            else[m
+[31m-//            {[m
+[31m-//                // Buffer overflow - reset[m
+[31m-//                rxIndex = 0;[m
+[31m-//                memset(rxBuffer, 0, sizeof(rxBuffer));[m
+[31m-//            }[m
+[31m-//        }[m
+[31m-//[m
+[31m-//        HAL_UART_Receive_IT(&huart1, &rxByte, 1);[m
+[31m-//    }[m
+[31m-//}[m
+ [m
+ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)[m
+ {[m
+[36m@@ -851,11 +753,70 @@[m [mvoid HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)[m
+ /* USER CODE END Header_StartAS7341Task */[m
+ void StartAS7341Task(void *argument)[m
+ {[m
+[32m+[m
+   /* USER CODE BEGIN 5 */[m
+   for(;;)[m
+   {[m
+       if(uartCmd.start && uartCmd.sensor == SENSOR_AS7341)[m
+       {[m
+[32m+[m
+[32m+[m[41m    [m	[32m  HAL_I2C_DeInit(&hi2c1);[m
+[32m+[m[41m    [m	[32m  HAL_Delay(5);[m
+[32m+[m[41m    [m	[32m  HAL_I2C_Init(&hi2c1);[m
+[32m+[m
+[32m+[m[41m    [m	[32m  if (HAL_I2C_IsDeviceReady(&hi2c1,[m
+[32m+[m[41m    [m	[32m                            AS7341_I2CADDR_DEFAULT << 1,[m
+[32m+[m[41m    [m	[32m                            5,[m
+[32m+[m[41m    [m	[32m                            100) != HAL_OK)[m
+[32m+[m[41m    [m	[32m  {[m
+[32m+[m[41m    [m	[32m      HAL_UART_Transmit(&huart1,[m
+[32m+[m[41m    [m	[32m                        (uint8_t *)"AS7341 NOT FOUND\r\n",[m
+[32m+[m[41m    [m	[32m                        19,[m
+[32m+[m[41m    [m	[32m                        HAL_MAX_DELAY);[m
+[32m+[m
+[32m+[m[41m    [m	[32m      uartCmd.start = 0;[m
+[32m+[m[41m    [m	[32m      uartCmd.sensor = SENSOR_NONE;[m
+[32m+[m[41m    [m	[32m      continue;[m
+[32m+[m[41m    [m	[32m  }[m
+[32m+[m
+[32m+[m[41m    [m	[32m  Adafruit_AS7341_Init(&as7341);[m
+[32m+[m
+[32m+[m[41m    [m	[32m  if (!Adafruit_AS7341_begin(&as7341,[m
+[32m+[m[41m    [m	[32m                             AS7341_I2CADDR_DEFAULT,[m
+[32m+[m[41m    [m	[32m                             &hi2c1,[m
+[32m+[m[41m    [m	[32m                             0))[m
+[32m+[m[41m    [m	[32m  {[m
+[32m+[m[41m    [m	[32m      HAL_UART_Transmit(&huart1,[m
+[32m+[m[41m    [m	[32m                        (uint8_t *)"AS7341 INIT FAILED\r\n",[m
+[32m+[m[41m    [m	[32m                        20,[m
+[32m+[m[41m    [m	[32m                        HAL_MAX_DELAY);[m
+[32m+[m
+[32m+[m[41m    [m	[32m      uartCmd.start = 0;[m
+[32m+[m[41m    [m	[32m      uartCmd.sensor = SENSOR_NONE;[m
+[32m+[m[41m    [m	[32m      continue;[m
+[32m+[m[41m    [m	[32m  }[m
+[32m+[m
+[32m+[m[41m    [m	[32m  /* Sensor is connected - initialize it again */[m
+[32m+[m[41m    [m	[32m  Adafruit_AS7341_Init(&as7341);[m
+[32m+[m
+[32m+[m[41m    [m	[32m  if (!Adafruit_AS7341_begin(&as7341,[m
+[32m+[m[41m    [m	[32m                             AS7341_I2CADDR_DEFAULT,[m
+[32m+[m[41m    [m	[32m                             &hi2c1,[m
+[32m+[m[41m    [m	[32m                             0))[m
+[32m+[m[41m    [m	[32m  {[m
+[32m+[m[41m    [m	[32m      HAL_UART_Transmit(&huart1,[m
+[32m+[m[41m    [m	[32m                        (uint8_t *)"AS7341 INIT FAILED\r\n",[m
+[32m+[m[41m    [m	[32m                        20,[m
+[32m+[m[41m    [m	[32m                        HAL_MAX_DELAY);[m
+[32m+[m
+[32m+[m[41m    [m	[32m      uartCmd.start = 0;[m
+[32m+[m[41m    [m	[32m      uartCmd.sensor = SENSOR_NONE;[m
+[32m+[m[41m    [m	[32m      continue;[m
+[32m+[m[41m    [m	[32m  }[m
+[32m+[m
+[32m+[m[41m    [m	[32m  Adafruit_AS7341_setATIME(&as7341, 50);[m
+[32m+[m[41m    [m	[32m  Adafruit_AS7341_setASTEP(&as7341, 999);[m
+[32m+[m[41m    [m	[32m  Adafruit_AS7341_setGain(&as7341, AS7341_GAIN_16X);[m
+           // Ensure LED is off initially[m
+           ControlWhiteLED(LED_OFF);[m
+ [m
+[36m@@ -946,17 +907,52 @@[m [mvoid StartLTR390(void *argument)[m
+ [m
+   if(!LTR390_Begin(&ltr))[m
+   {[m
+[31m-      Error_Handler();[m
+[32m+[m	[32m  osDelay(1);[m
+[32m+[m[32m//      Error_Handler();[m
+[32m+[m
+   }[m
+ [m
+[31m-  LTR390_SetMode(&ltr, LTR390_MODE_UVS);[m
+[31m-  LTR390_SetGain(&ltr, LTR390_GAIN_18);[m
+[31m-  LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);[m
+[32m+[m[32m//  LTR390_SetMode(&ltr, LTR390_MODE_UVS);[m
+[32m+[m[32m//  LTR390_SetGain(&ltr, LTR390_GAIN_18);[m
+[32m+[m[32m//  LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);[m
+ [m
+   for(;;)[m
+   {[m
+       if(uartCmd.start && uartCmd.sensor == SENSOR_LTR390)[m
+       {[m
+[32m+[m[41m    [m	[32m  if (HAL_I2C_IsDeviceReady(&hi2c3,[m
+[32m+[m[41m    [m	[32m                            0X53 << 1,[m
+[32m+[m[41m    [m	[32m                            2,[m
+[32m+[m[41m    [m	[32m                            100) != HAL_OK)[m
+[32m+[m[41m    [m	[32m  {[m
+[32m+[m[41m    [m	[32m      HAL_UART_Transmit(&huart1,[m
+[32m+[m[41m    [m	[32m                        (uint8_t *)"LTR390 NOT FOUND\r\n",[m
+[32m+[m[41m    [m	[32m                        19,[m
+[32m+[m[41m    [m	[32m                        HAL_MAX_DELAY);[m
+[32m+[m
+[32m+[m[41m    [m	[32m      uartCmd.start = 0;[m
+[32m+[m[41m    [m	[32m      uartCmd.sensor = SENSOR_NONE;[m
+[32m+[m[41m    [m	[32m      continue;[m
+[32m+[m[41m    [m	[32m  }[m
+[32m+[m
+[32m+[m[41m    [m	[32m  /* Reinitialize every time */[m
+[32m+[m[41m    [m	[32m  LTR390_Init(&ltr, &hi2c3);[m
+[32m+[m
+[32m+[m[41m    [m	[32m  if (!LTR390_Begin(&ltr))[m
+[32m+[m[41m    [m	[32m  {[m
+[32m+[m[41m    [m	[32m      HAL_UART_Transmit(&huart1,[m
+[32m+[m[41m    [m	[32m                        (uint8_t *)"LTR390 INIT FAILED\r\n",[m
+[32m+[m[41m    [m	[32m                        20,[m
+[32m+[m[41m    [m	[32m                        HAL_MAX_DELAY);[m
+[32m+[m
+[32m+[m[41m    [m	[32m      uartCmd.start = 0;[m
+[32m+[m[41m    [m	[32m      uartCmd.sensor = SENSOR_NONE;[m
+[32m+[m[41m    [m	[32m      continue;[m
+[32m+[m[41m    [m	[32m  }[m
+[32m+[m
+[32m+[m[41m    [m	[32m  LTR390_SetMode(&ltr, LTR390_MODE_UVS);[m
+[32m+[m[41m    [m	[32m  LTR390_SetGain(&ltr, LTR390_GAIN_18);[m
+[32m+[m[41m    [m	[32m  LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);[m
+           // Ensure UV LED is off initially[m
+           HAL_GPIO_WritePin(UV_LED_GPIO_Port, UV_LED_Pin, GPIO_PIN_RESET);[m
+ [m

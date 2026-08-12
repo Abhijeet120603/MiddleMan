@@ -1,0 +1,71 @@
+[33mcommit de51ac3afd9cd458acb0d76a2e533bb22030dd30[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Thu Aug 6 15:24:39 2026 +0530
+
+    sensor_if not detected then gives error
+
+[33mcommit 15022786d64b1e336a86ebb8ab9d3bf38c0bb4dd[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Thu Aug 6 11:01:32 2026 +0530
+
+    All fine upto stepper_sensor_uart
+
+[33mcommit d4190a4f03cdb1e9b2e7374ad83d9e5b2445fe3c[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Tue Aug 4 15:11:35 2026 +0530
+
+    Added Stepper driver implementation all working pump not check but sensor works
+
+[33mcommit ca334ac2f1a7170044457f31c82fe110a0354a1b[m[33m ([m[1;31morigin/both_sensor_backup[m[33m, [m[1;32mboth_sensor_backup[m[33m)[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Sat Aug 1 13:57:47 2026 +0530
+
+    Added UART command protocol and 10-channel AS7341 readings
+
+[33mcommit 1c00727d7d4c96cd0b0be16487c0b086dd293247[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Thu Jul 30 14:47:56 2026 +0530
+
+    both sensor merged
+
+[33mcommit fb0fb19505fed83b07f21dc59af1b331a662140d[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Wed Jul 29 17:43:32 2026 +0530
+
+    Added AS7341 STM32 driver
+
+[33mcommit c424f5dd574b3ae021ea9763eb905118aed23033[m[33m ([m[1;33mtag: [m[1;33mv2[m[33m)[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Fri Jul 24 16:56:06 2026 +0530
+
+    Update IR_bpw34_opa381 to v2
+
+[33mcommit 8ed184562cdf33c251782fa53457e2c45f9bd01e[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Thu Jul 23 15:47:25 2026 +0530
+
+    Add IR_bpw34_opa381 project
+
+[33mcommit 17c371e93d5e0779330cf8334318537cc97345fb[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Thu Jul 23 15:42:19 2026 +0530
+
+    Add IR_bpw34_opa381 project
+
+[33mcommit 28f277d89fe72a3b29b695c234d94bf2a1db25c7[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Tue Jul 14 02:20:34 2026 +0530
+
+    Add .gitignore
+
+[33mcommit c555c7497529792d7a51f6e587099defceb6a7dc[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Tue Jul 14 02:17:34 2026 +0530
+
+    Initial commit
+
+[33mcommit ce6c83fe6e42c6a4caa3b5d685e562a9f34ca074[m
+Author: Abhijeet120603 <abhijeet03abhijeet@gmail.com>
+Date:   Tue Jul 14 02:13:41 2026 +0530
+
+    Initial commit

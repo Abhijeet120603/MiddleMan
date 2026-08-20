@@ -73,30 +73,47 @@ static int ds18b20_reset(void)
  * @brief Check if DS18B20 sensor is present with retry
  * @return 1 if sensor found, 0 if not found
  */
+//int DS18B20_CheckPresence(void)
+//{
+//    int retry_count = 0;
+//    int result = 0;
+//
+//    while (retry_count < 5)
+//    {
+//        result = ds18b20_reset();
+//
+//        if (result == 1)  // Sensor responded
+//        {
+//            temp_sens_pres = 1;
+//            return 1;
+//        }
+//
+//        retry_count++;
+//        if (retry_count < 5)
+//        {
+//            HAL_Delay(2000);  // Wait 2 seconds before retry
+//        }
+//    }
+//
+//    // All 5 attempts failed
+//    temp_sens_pres = 0;
+//    return 0;
+//}
+
 int DS18B20_CheckPresence(void)
 {
-    int retry_count = 0;
-    int result = 0;
+    int result;
 
-    while (retry_count < 5)
+    result = ds18b20_reset();
+
+    if (result == 1)
     {
-        result = ds18b20_reset();
-
-        if (result == 1)  // Sensor responded
-        {
-            temp_sens_pres = 1;
-            return 1;
-        }
-
-        retry_count++;
-        if (retry_count < 5)
-        {
-            HAL_Delay(2000);  // Wait 2 seconds before retry
-        }
+        temp_sens_pres = 1;
+        return 1;
     }
 
-    // All 5 attempts failed
     temp_sens_pres = 0;
+
     return 0;
 }
 
@@ -180,68 +197,238 @@ uint8_t DS18B20_Read(void)
     return value;
 }
 
-/**
- * @brief Read temperature from DS18B20 sensor
- * @return Temperature in Celsius
- */
+
+//float DS18B20_GetTemperature(void)
+//{
+//    uint8_t Temp_LSB;
+//    uint8_t Temp_MSB;
+//    uint8_t Scratchpad[9];
+//
+//    int16_t raw_temp;
+//
+//    /*
+//     * ---------------------------------------------------------
+//     * STEP 1: CHECK SENSOR PRESENCE
+//     * ---------------------------------------------------------
+//     */
+//
+//    if (DS18B20_CheckPresence() == 0)
+//    {
+//        temp_sens_pres = 0;
+//        temp_out_of_range = 0;
+//
+//        /*
+//         * Do NOT use old temperature as valid temperature.
+//         */
+//        Temperature = 0.0f;
+//
+//        return 0.0f;
+//    }
+//
+//    /*
+//     * Sensor detected
+//     */
+//    temp_sens_pres = 1;
+//
+//
+//    /*
+//     * ---------------------------------------------------------
+//     * STEP 2: START TEMPERATURE CONVERSION
+//     * ---------------------------------------------------------
+//     */
+//
+//    if (ds18b20_reset() == 0)
+//    {
+//        temp_sens_pres = 0;
+//        Temperature = 0.0f;
+//
+//        return 0.0f;
+//    }
+//
+//    DS18B20_Write(0xCC);       // Skip ROM
+//    DS18B20_Write(0x44);       // Convert T
+//
+//
+//    /*
+//     * DS18B20 12-bit conversion
+//     *
+//     * Maximum conversion time = 750 ms
+//     */
+//    HAL_Delay(750);
+//
+//
+//    /*
+//     * ---------------------------------------------------------
+//     * STEP 3: CHECK SENSOR AGAIN
+//     * ---------------------------------------------------------
+//     */
+//
+//    if (ds18b20_reset() == 0)
+//    {
+//        temp_sens_pres = 0;
+//        Temperature = 0.0f;
+//
+//        return 0.0f;
+//    }
+//
+//
+//    /*
+//     * ---------------------------------------------------------
+//     * STEP 4: READ SCRATCHPAD
+//     * ---------------------------------------------------------
+//     */
+//
+//    DS18B20_Write(0xCC);       // Skip ROM
+//    DS18B20_Write(0xBE);       // Read Scratchpad
+//
+//
+//    for (int i = 0; i < 9; i++)
+//    {
+//        Scratchpad[i] = DS18B20_Read();
+//    }
+//
+//
+//    /*
+//     * ---------------------------------------------------------
+//     * STEP 5: CHECK FOR INVALID DATA
+//     * ---------------------------------------------------------
+//     */
+//
+//    uint8_t all_ff = 1;
+//
+//    for (int i = 0; i < 9; i++)
+//    {
+//        if (Scratchpad[i] != 0xFF)
+//        {
+//            all_ff = 0;
+//            break;
+//        }
+//    }
+//
+//    if (all_ff)
+//    {
+//        temp_sens_pres = 0;
+//        Temperature = 0.0f;
+//
+//        return 0.0f;
+//    }
+//
+//
+//    /*
+//     * ---------------------------------------------------------
+//     * STEP 6: CONVERT RAW TEMPERATURE
+//     * ---------------------------------------------------------
+//     */
+//
+//    Temp_LSB = Scratchpad[0];
+//    Temp_MSB = Scratchpad[1];
+//
+//    raw_temp = (int16_t)((Temp_MSB << 8) | Temp_LSB);
+//
+//    Temperature = (float)raw_temp / 16.0f;
+//
+//
+//    /*
+//     * ---------------------------------------------------------
+//     * STEP 7: TEMPERATURE SAFETY
+//     * ---------------------------------------------------------
+//     */
+//
+//    if (Temperature > 40.0f)
+//    {
+//        temp_out_of_range = 1;
+//    }
+//    else
+//    {
+//        temp_out_of_range = 0;
+//    }
+//
+//    /*
+//     * Sensor successfully read
+//     */
+//    temp_sens_pres = 1;
+//
+//    return Temperature;
+//}
+
+
 float DS18B20_GetTemperature(void)
 {
-    uint8_t Temp_LSB, Temp_MSB;
+    uint8_t Temp_LSB;
+    uint8_t Temp_MSB;
     uint8_t Scratchpad[9];
-    float temp_value = 0.0f;
-    int presence;
 
-    // Check if sensor is present (this will set temp_sens_pres)
-    presence = DS18B20_CheckPresence();
+    int16_t raw_temp;
 
-    if (presence == 0)
+    /* =========================================================
+     * 1. CHECK SENSOR PRESENCE
+     * ========================================================= */
+
+    if (DS18B20_CheckPresence() == 0)
     {
-        // Sensor not found
-        Temperature = 0.0f;
-        temp_out_of_range = 0;
         temp_sens_pres = 0;
+        temp_out_of_range = 0;
+        Temperature = 0.0f;
+
         return 0.0f;
     }
 
-    // Sensor found
+    /* Sensor found */
     temp_sens_pres = 1;
 
-    // Start temperature conversion
+
+    /* =========================================================
+     * 2. START CONVERSION
+     * ========================================================= */
+
     if (ds18b20_reset() == 0)
     {
-        // Sensor disappeared
         temp_sens_pres = 0;
-        Temperature = 0.0f;
         temp_out_of_range = 0;
+        Temperature = 0.0f;
+
         return 0.0f;
     }
 
-    DS18B20_Write(0xCC);  // Skip ROM
-    DS18B20_Write(0x44);  // Convert T
+    DS18B20_Write(0xCC);
+    DS18B20_Write(0x44);
 
-    HAL_Delay(750);  // Wait for conversion (max 750ms for 12-bit)
+    HAL_Delay(750);
 
-    // Read scratchpad
+
+    /* =========================================================
+     * 3. SENSOR MUST STILL BE PRESENT
+     * ========================================================= */
+
     if (ds18b20_reset() == 0)
     {
-        // Sensor disappeared during conversion
         temp_sens_pres = 0;
-        Temperature = 0.0f;
         temp_out_of_range = 0;
+        Temperature = 0.0f;
+
         return 0.0f;
     }
 
-    DS18B20_Write(0xCC);  // Skip ROM
-    DS18B20_Write(0xBE);  // Read Scratchpad
 
-    // Read all 9 bytes of scratchpad
+    /* =========================================================
+     * 4. READ SCRATCHPAD
+     * ========================================================= */
+
+    DS18B20_Write(0xCC);
+    DS18B20_Write(0xBE);
+
     for (int i = 0; i < 9; i++)
     {
         Scratchpad[i] = DS18B20_Read();
     }
 
-    // Validate data - check if scratchpad is all 0xFF (disconnected)
+
+    /* =========================================================
+     * 5. VALIDATE SCRATCHPAD
+     * ========================================================= */
+
     uint8_t all_ff = 1;
+
     for (int i = 0; i < 9; i++)
     {
         if (Scratchpad[i] != 0xFF)
@@ -253,23 +440,49 @@ float DS18B20_GetTemperature(void)
 
     if (all_ff)
     {
-        // All bytes are 0xFF - sensor is disconnected
         temp_sens_pres = 0;
-        Temperature = 0.0f;
         temp_out_of_range = 0;
+        Temperature = 0.0f;
+
         return 0.0f;
     }
 
-    // Extract temperature from first two bytes
+
+    /* =========================================================
+     * 6. VALIDATE TEMPERATURE BY RAW VALUE
+     * ========================================================= */
+
     Temp_LSB = Scratchpad[0];
     Temp_MSB = Scratchpad[1];
 
-    Temp = ((Temp_MSB << 8) | Temp_LSB);
-    temp_value = (float)Temp / 16.0f;  // Resolution is 0.0625°C
+    raw_temp = (int16_t)((Temp_MSB << 8) | Temp_LSB);
 
-    Temperature = temp_value;
+    /*
+     * DS18B20 power-up/default scratchpad is commonly 85°C.
+     * This is optional, but prevents treating an invalid
+     * startup value as a real measurement.
+     */
 
-    // Check if temperature is out of range (> 40°C)
+    if (raw_temp == 0x0550)
+    {
+        temp_sens_pres = 0;
+        Temperature = 0.0f;
+
+        return 0.0f;
+    }
+
+
+    /* =========================================================
+     * 7. CONVERT TEMPERATURE
+     * ========================================================= */
+
+    Temperature = (float)raw_temp / 16.0f;
+
+
+    /* =========================================================
+     * 8. SAFETY LIMIT
+     * ========================================================= */
+
     if (Temperature > 40.0f)
     {
         temp_out_of_range = 1;
@@ -278,6 +491,12 @@ float DS18B20_GetTemperature(void)
     {
         temp_out_of_range = 0;
     }
+
+
+    /*
+     * Only NOW declare sensor valid.
+     */
+    temp_sens_pres = 1;
 
     return Temperature;
 }

@@ -75,6 +75,8 @@ void Error_Handler(void);
 #define Pump_Forward_TIM3_CH1_GPIO_Port GPIOA
 #define Pump_Reverse_TIM3_CH1_Pin GPIO_PIN_7
 #define Pump_Reverse_TIM3_CH1_GPIO_Port GPIOA
+#define DS18B20_Pin GPIO_PIN_13
+#define DS18B20_GPIO_Port GPIOB
 #define White_LED_Pin GPIO_PIN_14
 #define White_LED_GPIO_Port GPIOB
 #define UV_LED_Pin GPIO_PIN_15

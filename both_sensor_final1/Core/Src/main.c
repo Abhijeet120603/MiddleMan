@@ -558,7 +558,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, EN_Pin|MS1_Pin|MS2_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, White_LED_Pin|UV_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, DS18B20_Pin|White_LED_Pin|UV_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : STEP_Pin EN_Pin DIR_Pin MS1_Pin
                            MS2_Pin */
@@ -574,6 +574,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Groove_Sensor_In_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DS18B20_Pin */
+  GPIO_InitStruct.Pin = DS18B20_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(DS18B20_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : White_LED_Pin UV_LED_Pin */
   GPIO_InitStruct.Pin = White_LED_Pin|UV_LED_Pin;

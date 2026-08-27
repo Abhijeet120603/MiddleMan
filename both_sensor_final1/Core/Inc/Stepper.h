@@ -52,6 +52,7 @@ void Stepper_Test(void);
 /* Sequence Functions */
 void Stepper_GrooveSequence(void);
 
+
 #ifdef __cplusplus
 }
 #endif

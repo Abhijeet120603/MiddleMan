@@ -375,8 +375,8 @@ void Stepper_Test(void)
   */
 void Stepper_UV_Sensor_Align(void)
 {
-    uint32_t delay_fast = 20;       // First approach speed
-    uint32_t delay_slow = 40;      // Second approach - much slower
+    uint32_t delay_fast = 10;       // First approach speed
+    uint32_t delay_slow = 20;      // Second approach - much slower
 
     uint32_t max_steps = 10000;
 
@@ -469,7 +469,8 @@ void Stepper_UV_Sensor_Align(void)
             HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
             osDelay(10);
 
-            for (uint32_t i = 0; i < 115; i++)
+//            for (uint32_t i = 0; i < 115; i++)
+            for (uint32_t i = 0; i < 455; i++)
             {
                 Stepper_Step();
                 osDelay(delay_slow);
@@ -484,14 +485,16 @@ void Stepper_UV_Sensor_Align(void)
     Stepper_Disable();
 }
 
+
+
 /**
   * @brief  Align for White LED measurement
   * @retval None
   */
 void Stepper_White_LED_Align(void)
 {
-    uint32_t delay_fast = 20;       // First approach speed
-    uint32_t delay_slow = 40;      // Second approach - much slower
+    uint32_t delay_fast = 10;       // First approach speed
+    uint32_t delay_slow = 20;      // Second approach - much slower
 
     uint32_t max_steps = 10000;
 
@@ -584,11 +587,14 @@ void Stepper_White_LED_Align(void)
             HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
             osDelay(10);
 
-            for (uint32_t i = 0; i < 20; i++)
+//            for (uint32_t i = 0; i < 20; i++)
+            for (uint32_t i = 0; i < 70; i++)
             {
                 Stepper_Step();
                 osDelay(delay_slow);
             }
+
+//            Stepper_Disable();
         }
     }
 

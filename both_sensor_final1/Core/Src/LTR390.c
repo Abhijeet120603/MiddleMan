@@ -45,8 +45,8 @@ bool LTR390_Begin(LTR390_HandleTypeDef *ltr) {
         return false;
     }
 
-    LTR390_SetGain(ltr, LTR390_GAIN_3);
-    LTR390_SetResolution(ltr, LTR390_RESOLUTION_18BIT);
+    LTR390_SetGain(ltr, LTR390_GAIN_18);
+    LTR390_SetResolution(ltr, LTR390_RESOLUTION_20BIT);
 
     return true;
 }
@@ -150,9 +150,24 @@ ltr390_gain_t LTR390_GetGain(LTR390_HandleTypeDef *ltr) {
     return (ltr390_gain_t)reg_val;
 }
 
-void LTR390_SetResolution(LTR390_HandleTypeDef *ltr, ltr390_resolution_t res) {
-    uint8_t reg_val = 0;
-    reg_val |= (res << 4);
+//void LTR390_SetResolution(LTR390_HandleTypeDef *ltr, ltr390_resolution_t res) {
+//    uint8_t reg_val = 0;
+//    reg_val |= (res << 4);
+//    LTR390_WriteRegister(ltr, LTR390_MEAS_RATE, reg_val);
+//}
+
+void LTR390_SetResolution(LTR390_HandleTypeDef *ltr, ltr390_resolution_t res)
+{
+    uint8_t reg_val;
+
+    reg_val = LTR390_ReadRegister(ltr, LTR390_MEAS_RATE);
+
+    // Clear resolution bits 6:4
+    reg_val &= 0x8F;
+
+    // Set new resolution
+    reg_val |= ((uint8_t)res << 4);
+
     LTR390_WriteRegister(ltr, LTR390_MEAS_RATE, reg_val);
 }
 

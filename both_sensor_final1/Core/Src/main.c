@@ -40,6 +40,17 @@ typedef struct
     uint32_t incubation;
     uint8_t start;
 } UART_Command_t;
+
+typedef enum {
+    STATE_IDLE = 0,
+    STATE_WHITE_LED_ALIGN,
+    STATE_UV_LED_ALIGN,
+    STATE_STEPPER_HOME,
+    STATE_ASPIRATE_SAMPLE,
+    STATE_AS7341_MEASURE,
+    STATE_LTR390_MEASURE,
+	STATE_FLOW_CELL_CLEAN
+} SystemState_t;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -71,61 +82,87 @@ osThreadId_t AS7341_SendHandle;
 const osThreadAttr_t AS7341_Send_attributes = {
   .name = "AS7341_Send",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityHigh1,
 };
 /* Definitions for Send_LTR390 */
 osThreadId_t Send_LTR390Handle;
 const osThreadAttr_t Send_LTR390_attributes = {
   .name = "Send_LTR390",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityHigh2,
 };
 /* Definitions for UartSend */
 osThreadId_t UartSendHandle;
 const osThreadAttr_t UartSend_attributes = {
   .name = "UartSend",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityRealtime1,
 };
 /* Definitions for Stepper_Home */
 osThreadId_t Stepper_HomeHandle;
 const osThreadAttr_t Stepper_Home_attributes = {
   .name = "Stepper_Home",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityLow5,
 };
 /* Definitions for White_Led_Align */
 osThreadId_t White_Led_AlignHandle;
 const osThreadAttr_t White_Led_Align_attributes = {
   .name = "White_Led_Align",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityLow7,
 };
 /* Definitions for UV_Led_Align */
 osThreadId_t UV_Led_AlignHandle;
 const osThreadAttr_t UV_Led_Align_attributes = {
   .name = "UV_Led_Align",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityLow7,
 };
 /* Definitions for Aspirate */
 osThreadId_t AspirateHandle;
 const osThreadAttr_t Aspirate_attributes = {
   .name = "Aspirate",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityNormal1,
 };
 /* Definitions for Command_Dispatc */
 osThreadId_t Command_DispatcHandle;
 const osThreadAttr_t Command_Dispatc_attributes = {
   .name = "Command_Dispatc",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityAboveNormal,
+  .priority = (osPriority_t) osPriorityRealtime,
+};
+/* Definitions for Limit_sw */
+osThreadId_t Limit_swHandle;
+const osThreadAttr_t Limit_sw_attributes = {
+  .name = "Limit_sw",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for Clean_Flow_Cell */
+osThreadId_t Clean_Flow_CellHandle;
+const osThreadAttr_t Clean_Flow_Cell_attributes = {
+  .name = "Clean_Flow_Cell",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for initialize_pump */
+osThreadId_t initialize_pumpHandle;
+const osThreadAttr_t initialize_pump_attributes = {
+  .name = "initialize_pump",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for commandQueue */
 osMessageQueueId_t commandQueueHandle;
 const osMessageQueueAttr_t commandQueue_attributes = {
   .name = "commandQueue"
+};
+/* Definitions for pumpMutex */
+osMutexId_t pumpMutexHandle;
+const osMutexAttr_t pumpMutex_attributes = {
+  .name = "pumpMutex"
 };
 /* Definitions for messageI2C1_Lock */
 osSemaphoreId_t messageI2C1_LockHandle;
@@ -142,13 +179,14 @@ uint8_t rxByte;
 char rxBuffer[20];
 uint8_t rxIndex = 0;
 
-//volatile uint8_t currentSensor = 0;
-//
-//volatile uint32_t duration = 0;
-
 volatile UART_Command_t uartCmd = {0};
 
 uint8_t AS7341_Present = 0;
+
+volatile SystemState_t systemState = STATE_IDLE;
+volatile uint8_t limitSwitchPressed = 0;
+
+volatile uint8_t initializePumpRequested = 0;
 
 /* USER CODE END PV */
 
@@ -168,6 +206,9 @@ void White_Led(void *argument);
 void UV_Led(void *argument);
 void Aspirate_Sample(void *argument);
 void Command_Dispatcher(void *argument);
+void Limit_sw_pressed(void *argument);
+void Flow_Cell_Clean(void *argument);
+void pump_initialize(void *argument);
 
 /* USER CODE BEGIN PFP */
 void ControlWhiteLED(uint8_t state);
@@ -213,11 +254,15 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  PUMP_Init(&htim3);
 
   /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();
+  /* Create the mutex(es) */
+  /* creation of pumpMutex */
+  pumpMutexHandle = osMutexNew(&pumpMutex_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -270,6 +315,15 @@ int main(void)
   /* creation of Command_Dispatc */
   Command_DispatcHandle = osThreadNew(Command_Dispatcher, NULL, &Command_Dispatc_attributes);
 
+  /* creation of Limit_sw */
+  Limit_swHandle = osThreadNew(Limit_sw_pressed, NULL, &Limit_sw_attributes);
+
+  /* creation of Clean_Flow_Cell */
+  Clean_Flow_CellHandle = osThreadNew(Flow_Cell_Clean, NULL, &Clean_Flow_Cell_attributes);
+
+  /* creation of initialize_pump */
+  initialize_pumpHandle = osThreadNew(pump_initialize, NULL, &initialize_pump_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -285,6 +339,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
 //	  Stepper_IsGrooveDetected();
@@ -548,8 +603,12 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(Servo_GPIO_Port, Servo_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, STEP_Pin|DIR_Pin, GPIO_PIN_RESET);
@@ -558,7 +617,15 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, EN_Pin|MS1_Pin|MS2_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, DS18B20_Pin|White_LED_Pin|UV_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Peltier2_Pin|Buzzer_Pin|Peltier1_Pin|DS18B20_Pin
+                          |White_LED_Pin|UV_LED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : Servo_Pin */
+  GPIO_InitStruct.Pin = Servo_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(Servo_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : STEP_Pin EN_Pin DIR_Pin MS1_Pin
                            MS2_Pin */
@@ -575,19 +642,27 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Groove_Sensor_In_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : Limit_SW_Pin */
+  GPIO_InitStruct.Pin = Limit_SW_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(Limit_SW_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : Peltier2_Pin Buzzer_Pin Peltier1_Pin White_LED_Pin
+                           UV_LED_Pin */
+  GPIO_InitStruct.Pin = Peltier2_Pin|Buzzer_Pin|Peltier1_Pin|White_LED_Pin
+                          |UV_LED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
   /*Configure GPIO pin : DS18B20_Pin */
   GPIO_InitStruct.Pin = DS18B20_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(DS18B20_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : White_LED_Pin UV_LED_Pin */
-  GPIO_InitStruct.Pin = White_LED_Pin|UV_LED_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -620,6 +695,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                                       (uint8_t *)"PONG\r\n",
                                       6,
                                       HAL_MAX_DELAY);
+
+                    /* Request startup pump initialization */
+                    initializePumpRequested = 1;
                 }
 
                 else if (strcmp(rxBuffer, "HELP") == 0 || strcmp(rxBuffer, "help") == 0)
@@ -632,7 +710,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                         "UV_LED_ALIGN - Start UV LED alignment\r\n"
                         "ASPIRATE - Run aspirate sample sequence\r\n"
                         "AS7341,<duration>,<incubation> - AS7341 sensor measurement\r\n"
-                        "LTR390,<duration>,<incubation> - LTR390 sensor measurement\r\n";
+                        "LTR390,<duration>,<incubation> - LTR390 sensor measurement\r\n"
+                    	"LIMIT_SWITCH - Automatically triggers aspiration when IDLE\r\n"
+                    	"CLEAN - Run flow cell cleaning\r\n";
 
                     HAL_UART_Transmit(&huart1, (uint8_t *)helpMsg, strlen(helpMsg), HAL_MAX_DELAY);
                 }
@@ -640,6 +720,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 else if (strcmp(rxBuffer, "STEPPER_HOME") == 0 ||
                          strcmp(rxBuffer, "stepper_home") == 0)
                 {
+//                    // Cancel waiting state if active
+//                    if (systemState == STATE_WAITING_FOR_LIMIT)
+//                    {
+//                        systemState = STATE_IDLE;
+//                        HAL_UART_Transmit(&huart1,
+//                            (uint8_t *)"WAITING CANCELLED - NEW COMMAND RECEIVED\r\n",
+//                            43, HAL_MAX_DELAY);
+//                    }
                     // Set command for stepper home
                     uartCmd.sensor = SENSOR_NONE;
                     uartCmd.duration = 0;
@@ -650,6 +738,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 else if (strcmp(rxBuffer, "WHITE_LED_ALIGN") == 0 ||
                          strcmp(rxBuffer, "white_led_align") == 0)
                 {
+//                    // Cancel waiting state if active
+//                    if (systemState == STATE_WAITING_FOR_LIMIT)
+//                    {
+//                        systemState = STATE_IDLE;
+//                        HAL_UART_Transmit(&huart1,
+//                            (uint8_t *)"WAITING CANCELLED - NEW COMMAND RECEIVED\r\n",
+//                            43, HAL_MAX_DELAY);
+//                    }
                     uartCmd.sensor = SENSOR_NONE;
                     uartCmd.duration = 0;
                     uartCmd.incubation = 0;
@@ -659,6 +755,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 else if (strcmp(rxBuffer, "UV_LED_ALIGN") == 0 ||
                          strcmp(rxBuffer, "uv_led_align") == 0)
                 {
+//                    // Cancel waiting state if active
+//                    if (systemState == STATE_WAITING_FOR_LIMIT)
+//                    {
+//                        systemState = STATE_IDLE;
+//                        HAL_UART_Transmit(&huart1,
+//                            (uint8_t *)"WAITING CANCELLED - NEW COMMAND RECEIVED\r\n",
+//                            43, HAL_MAX_DELAY);
+//                    }
                     uartCmd.sensor = SENSOR_NONE;
                     uartCmd.duration = 0;
                     uartCmd.incubation = 0;
@@ -669,10 +773,46 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                          strcmp(rxBuffer, "aspirate") == 0 ||
                          strcmp(rxBuffer, "ASPIRATE_SAMPLE") == 0)
                 {
+
                     uartCmd.sensor = SENSOR_NONE;
                     uartCmd.duration = 0;
                     uartCmd.incubation = 0;
                     uartCmd.start = 5;  // Use 5 for aspirate sample
+                }
+
+                else if (strcmp(rxBuffer, "CLEAN") == 0 ||
+                         strcmp(rxBuffer, "clean") == 0)
+                {
+                    /*
+                     * Only accept CLEAN when system is IDLE.
+                     */
+                    if (systemState == STATE_IDLE)
+                    {
+                        uartCmd.sensor = SENSOR_NONE;
+                        uartCmd.duration = 0;
+                        uartCmd.incubation = 0;
+
+                        /*
+                         * Use 6 for CLEAN command
+                         */
+                        uartCmd.start = 6;
+
+                        HAL_UART_Transmit(
+                            &huart1,
+                            (uint8_t *)"CLEAN COMMAND RECEIVED\r\n",
+                            24,
+                            HAL_MAX_DELAY
+                        );
+                    }
+                    else
+                    {
+                        HAL_UART_Transmit(
+                            &huart1,
+                            (uint8_t *)"CANNOT CLEAN - BUSY\r\n",
+                            22,
+                            HAL_MAX_DELAY
+                        );
+                    }
                 }
 
                 else
@@ -681,6 +821,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                     char sensor[20];
                     int sec;
                     int incubate;
+
+//                    // Cancel waiting state if active before processing sensor commands
+//                    if (systemState == STATE_WAITING_FOR_LIMIT)
+//                    {
+//                        systemState = STATE_IDLE;
+//                        HAL_UART_Transmit(&huart1,
+//                            (uint8_t *)"WAITING CANCELLED - NEW COMMAND RECEIVED\r\n",
+//                            43, HAL_MAX_DELAY);
+//                    }
 
                     // Try parsing with 3 parameters: sensor,duration,incubation
                     if (sscanf(rxBuffer, "%[^,],%d,%d", sensor, &sec, &incubate) == 3)
@@ -723,6 +872,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 // Reset buffer for next command
                 rxIndex = 0;
                 memset(rxBuffer, 0, sizeof(rxBuffer));
+
+                HAL_UART_Transmit(&huart1,
+                                  (uint8_t *)"\r\n",
+                                  2,
+                                  HAL_MAX_DELAY);
             }
         }
         else if (rxByte != '\r' && rxByte != '\n')
@@ -755,11 +909,6 @@ void ControlWhiteLED(uint8_t state)
     }
 }
 
-
-//void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
-//{
-//    Stepper_TimerPulseFinishedCallback(htim);
-//}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartAS7341Task */
@@ -774,66 +923,66 @@ void StartAS7341Task(void *argument)
   /* USER CODE BEGIN 5 */
   for(;;)
   {
-      if(uartCmd.start && uartCmd.sensor == SENSOR_AS7341)
+      if(systemState == STATE_AS7341_MEASURE)
       {
+          HAL_I2C_DeInit(&hi2c1);
+          HAL_Delay(5);
+          HAL_I2C_Init(&hi2c1);
 
-    	  HAL_I2C_DeInit(&hi2c1);
-    	  HAL_Delay(5);
-    	  HAL_I2C_Init(&hi2c1);
+          if (HAL_I2C_IsDeviceReady(&hi2c1,
+                                    AS7341_I2CADDR_DEFAULT << 1,
+                                    5,
+                                    100) != HAL_OK)
+          {
+              HAL_UART_Transmit(&huart1,
+                                (uint8_t *)"AS7341 NOT FOUND\r\n",
+                                19,
+                                HAL_MAX_DELAY);
 
-    	  if (HAL_I2C_IsDeviceReady(&hi2c1,
-    	                            AS7341_I2CADDR_DEFAULT << 1,
-    	                            5,
-    	                            100) != HAL_OK)
-    	  {
-    	      HAL_UART_Transmit(&huart1,
-    	                        (uint8_t *)"AS7341 NOT FOUND\r\n",
-    	                        19,
-    	                        HAL_MAX_DELAY);
+              systemState = STATE_IDLE;
+              osThreadSetPriority(AS7341_SendHandle, osPriorityHigh1);
+              continue;
+          }
 
-    	      uartCmd.start = 0;
-    	      uartCmd.sensor = SENSOR_NONE;
-    	      continue;
-    	  }
+          Adafruit_AS7341_Init(&as7341);
 
-    	  Adafruit_AS7341_Init(&as7341);
+          if (!Adafruit_AS7341_begin(&as7341,
+                                     AS7341_I2CADDR_DEFAULT,
+                                     &hi2c1,
+                                     0))
+          {
+              HAL_UART_Transmit(&huart1,
+                                (uint8_t *)"AS7341 INIT FAILED\r\n",
+                                20,
+                                HAL_MAX_DELAY);
 
-    	  if (!Adafruit_AS7341_begin(&as7341,
-    	                             AS7341_I2CADDR_DEFAULT,
-    	                             &hi2c1,
-    	                             0))
-    	  {
-    	      HAL_UART_Transmit(&huart1,
-    	                        (uint8_t *)"AS7341 INIT FAILED\r\n",
-    	                        20,
-    	                        HAL_MAX_DELAY);
+              systemState = STATE_IDLE;
+              osThreadSetPriority(AS7341_SendHandle, osPriorityHigh1);
+              continue;
+          }
 
-    	      uartCmd.start = 0;
-    	      uartCmd.sensor = SENSOR_NONE;
-    	      continue;
-    	  }
+          /* Sensor is connected - initialize it again */
+          Adafruit_AS7341_Init(&as7341);
 
-    	  /* Sensor is connected - initialize it again */
-    	  Adafruit_AS7341_Init(&as7341);
+          if (!Adafruit_AS7341_begin(&as7341,
+                                     AS7341_I2CADDR_DEFAULT,
+                                     &hi2c1,
+                                     0))
+          {
+              HAL_UART_Transmit(&huart1,
+                                (uint8_t *)"AS7341 INIT FAILED\r\n",
+                                20,
+                                HAL_MAX_DELAY);
 
-    	  if (!Adafruit_AS7341_begin(&as7341,
-    	                             AS7341_I2CADDR_DEFAULT,
-    	                             &hi2c1,
-    	                             0))
-    	  {
-    	      HAL_UART_Transmit(&huart1,
-    	                        (uint8_t *)"AS7341 INIT FAILED\r\n",
-    	                        20,
-    	                        HAL_MAX_DELAY);
+              systemState = STATE_IDLE;
+              osThreadSetPriority(AS7341_SendHandle, osPriorityHigh1);
+              continue;
+          }
 
-    	      uartCmd.start = 0;
-    	      uartCmd.sensor = SENSOR_NONE;
-    	      continue;
-    	  }
+          Adafruit_AS7341_setATIME(&as7341, 50);
+          Adafruit_AS7341_setASTEP(&as7341, 999);
+          Adafruit_AS7341_setGain(&as7341, AS7341_GAIN_16X);
 
-    	  Adafruit_AS7341_setATIME(&as7341, 50);
-    	  Adafruit_AS7341_setASTEP(&as7341, 999);
-    	  Adafruit_AS7341_setGain(&as7341, AS7341_GAIN_16X);
           // Ensure LED is off initially
           ControlWhiteLED(LED_OFF);
 
@@ -899,8 +1048,11 @@ void StartAS7341Task(void *argument)
           // Turn off LED after measurements complete
           ControlWhiteLED(LED_OFF);
 
+          // Reset command and return to IDLE
           uartCmd.start = 0;
           uartCmd.sensor = SENSOR_NONE;
+          systemState = STATE_IDLE;
+          osThreadSetPriority(AS7341_SendHandle, osPriorityHigh1);
       }
 
       osDelay(10);
@@ -925,51 +1077,51 @@ void StartLTR390(void *argument)
   if(!LTR390_Begin(&ltr))
   {
 	  osDelay(1);
-//      Error_Handler();
 
   }
 
-//  LTR390_SetMode(&ltr, LTR390_MODE_UVS);
-//  LTR390_SetGain(&ltr, LTR390_GAIN_18);
-//  LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);
 
   for(;;)
   {
-      if(uartCmd.start && uartCmd.sensor == SENSOR_LTR390)
+      if(systemState == STATE_LTR390_MEASURE)
       {
-    	  if (HAL_I2C_IsDeviceReady(&hi2c3,
-    	                            0X53 << 1,
-    	                            2,
-    	                            100) != HAL_OK)
-    	  {
-    	      HAL_UART_Transmit(&huart1,
-    	                        (uint8_t *)"LTR390 NOT FOUND\r\n",
-    	                        19,
-    	                        HAL_MAX_DELAY);
+          if (HAL_I2C_IsDeviceReady(&hi2c3,
+                                    0X53 << 1,
+                                    2,
+                                    100) != HAL_OK)
+          {
+              HAL_UART_Transmit(&huart1,
+                                (uint8_t *)"LTR390 NOT FOUND\r\n",
+                                19,
+                                HAL_MAX_DELAY);
 
-    	      uartCmd.start = 0;
-    	      uartCmd.sensor = SENSOR_NONE;
-    	      continue;
-    	  }
+              systemState = STATE_IDLE;
+              osThreadSetPriority(Send_LTR390Handle, osPriorityHigh2);
+              continue;
+          }
 
-    	  /* Reinitialize every time */
-    	  LTR390_Init(&ltr, &hi2c3);
+          /* Reinitialize every time */
+          LTR390_Init(&ltr, &hi2c3);
 
-    	  if (!LTR390_Begin(&ltr))
-    	  {
-    	      HAL_UART_Transmit(&huart1,
-    	                        (uint8_t *)"LTR390 INIT FAILED\r\n",
-    	                        20,
-    	                        HAL_MAX_DELAY);
+          if (!LTR390_Begin(&ltr))
+          {
+              HAL_UART_Transmit(&huart1,
+                                (uint8_t *)"LTR390 INIT FAILED\r\n",
+                                20,
+                                HAL_MAX_DELAY);
 
-    	      uartCmd.start = 0;
-    	      uartCmd.sensor = SENSOR_NONE;
-    	      continue;
-    	  }
+              systemState = STATE_IDLE;
+              osThreadSetPriority(Send_LTR390Handle, osPriorityHigh2);
+              continue;
+          }
 
-    	  LTR390_SetMode(&ltr, LTR390_MODE_UVS);
-    	  LTR390_SetGain(&ltr, LTR390_GAIN_18);
-    	  LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);
+          LTR390_SetMode(&ltr, LTR390_MODE_UVS);
+          LTR390_SetGain(&ltr, LTR390_GAIN_18);
+          LTR390_SetResolution(&ltr, LTR390_RESOLUTION_20BIT);
+
+          // Wait for first 20-bit UV conversion
+          osDelay(450);
+
           // Ensure UV LED is off initially
           HAL_GPIO_WritePin(UV_LED_GPIO_Port, UV_LED_Pin, GPIO_PIN_RESET);
 
@@ -1035,8 +1187,11 @@ void StartLTR390(void *argument)
           // Turn off UV LED after measurements complete
           HAL_GPIO_WritePin(UV_LED_GPIO_Port, UV_LED_Pin, GPIO_PIN_RESET);
 
+          // Reset command and return to IDLE
           uartCmd.start = 0;
           uartCmd.sensor = SENSOR_NONE;
+          systemState = STATE_IDLE;
+          osThreadSetPriority(Send_LTR390Handle, osPriorityHigh2);
       }
 
       osDelay(10);
@@ -1054,11 +1209,10 @@ void StartLTR390(void *argument)
 void SendUART(void *argument)
 {
   /* USER CODE BEGIN SendUART */
-//    const char pong[] = "PONG\r\n";
 
     for (;;)
     {
-        osDelay(1000);
+        osDelay(10);
     }
   /* USER CODE END SendUART */
 }
@@ -1077,7 +1231,7 @@ void StartStepperHome(void *argument)
   /* Infinite loop */
     for(;;)
     {
-        if (uartCmd.start == 2)  // Stepper home command
+        if (systemState == STATE_STEPPER_HOME)  // Stepper home command
         {
             // Send acknowledgment
             HAL_UART_Transmit(&huart1, (uint8_t *)"STEPPER HOME START\r\n", 21, HAL_MAX_DELAY);
@@ -1088,8 +1242,9 @@ void StartStepperHome(void *argument)
 
             HAL_UART_Transmit(&huart1, (uint8_t *)"STEPPER HOME COMPLETE\r\n", 24, HAL_MAX_DELAY);
 
-            // Reset command
-            uartCmd.start = 0;
+            // Return to IDLE
+            systemState = STATE_IDLE;
+            osThreadSetPriority(Stepper_HomeHandle, osPriorityLow5);
         }
 
         osDelay(10);
@@ -1110,24 +1265,23 @@ void White_Led(void *argument)
   /* Infinite loop */
     for(;;)
     {
-        if (uartCmd.start == 3)  // White LED align command
-        {
-            // Send acknowledgment
-            HAL_UART_Transmit(&huart1, (uint8_t *)"WHITE LED ALIGN START\r\n", 24, HAL_MAX_DELAY);
+      if (systemState == STATE_WHITE_LED_ALIGN)
+      {
+        HAL_UART_Transmit(&huart1, (uint8_t *)"WHITE LED ALIGN START\r\n", 24, HAL_MAX_DELAY);
 
-            // Add your white LED alignment logic here
-            // For example, you might:
-            // - Turn on white LED
-            Stepper_White_LED_Align();
+        // Perform alignment
+
+        Stepper_White_LED_Align();
 
 
-            HAL_UART_Transmit(&huart1, (uint8_t *)"WHITE LED ALIGN COMPLETE\r\n", 27, HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart1, (uint8_t *)"WHITE LED ALIGN COMPLETE\r\n", 27, HAL_MAX_DELAY);
 
-            // Reset command
-            uartCmd.start = 0;
-        }
+        // Return to IDLE
+        systemState = STATE_IDLE;
+        osThreadSetPriority(White_Led_AlignHandle, osPriorityLow6);
+      }
 
-        osDelay(10);
+      osDelay(10);
     }
   /* USER CODE END White_Led */
 }
@@ -1146,7 +1300,7 @@ void UV_Led(void *argument)
   /* Infinite loop */
     for(;;)
     {
-        if (uartCmd.start == 4)  // UV LED align command
+        if (systemState == STATE_UV_LED_ALIGN)  // UV LED align command
         {
             // Send acknowledgment
             HAL_UART_Transmit(&huart1, (uint8_t *)"UV LED ALIGN START\r\n", 21, HAL_MAX_DELAY);
@@ -1155,8 +1309,9 @@ void UV_Led(void *argument)
 
             HAL_UART_Transmit(&huart1, (uint8_t *)"UV LED ALIGN COMPLETE\r\n", 24, HAL_MAX_DELAY);
 
-            // Reset command
-            uartCmd.start = 0;
+            // Return to IDLE
+            systemState = STATE_IDLE;
+            osThreadSetPriority(UV_Led_AlignHandle, osPriorityLow7);
         }
 
         osDelay(10);
@@ -1175,39 +1330,74 @@ void Aspirate_Sample(void *argument)
 {
   /* USER CODE BEGIN Aspirate_Sample */
     // Initialize the pump with TIM3 handle
-    PUMP_Init(&htim3);
 
     for(;;)
     {
-        if (uartCmd.start == 5)  // Aspirate sample command
+        if (systemState == STATE_ASPIRATE_SAMPLE)
         {
-            // Send acknowledgment
-            HAL_UART_Transmit(&huart1,
-                              (uint8_t *)"ASPIRATE SAMPLE START\r\n",
-                              24,
-                              HAL_MAX_DELAY);
 
-            // Perform aspirate sequence
-            // Forward (aspirate) - 10 seconds at 50% speed
-            PUMP_Move(PUMP_FORWARD, 10, 50);
+            HAL_UART_Transmit(
+                &huart1,
+                (uint8_t *)"ASPIRATE SAMPLE START\r\n",
+                24,
+                HAL_MAX_DELAY
+            );
 
-            // Small delay between directions
+            osMutexAcquire(pumpMutexHandle, osWaitForever);
+
+//            PUMP_Move(
+//                PUMP_FORWARD,
+//                1000, //DURATION SEC
+//                55 //PWM PERCENTAGE
+//            );
+
+            PUMP_Move(
+                PUMP_FORWARD,
+                1000, //DURATION SEC
+                55 //PWM PERCENTAGE
+            );
+
+            HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_SET);
             osDelay(100);
+            HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
 
-            // Reverse (dispense) - 5 seconds at 75% speed
-            PUMP_Move(PUMP_REVERSE, 5, 75);
 
-            // Ensure pump is stopped
+            osDelay(2000);
+
+            PUMP_Move(
+            	PUMP_FORWARD,
+                500, //DURATION SEC
+                50 //PWM PERCENTAGE
+            );
+
+//            PUMP_Move(
+//                PUMP_REVERSE,
+//                5,
+//                75
+//            );
+
             PUMP_Stop();
 
-            // Send completion message
-            HAL_UART_Transmit(&huart1,
-                              (uint8_t *)"ASPIRATE SAMPLE COMPLETE\r\n",
-                              27,
-                              HAL_MAX_DELAY);
+            osMutexRelease(pumpMutexHandle);
 
-            // Reset command
+            HAL_UART_Transmit(
+                &huart1,
+                (uint8_t *)"ASPIRATE SAMPLE COMPLETE\r\n",
+                26,
+                HAL_MAX_DELAY
+            );
+
             uartCmd.start = 0;
+            uartCmd.sensor = SENSOR_NONE;
+            uartCmd.duration = 0;
+            uartCmd.incubation = 0;
+
+            systemState = STATE_IDLE;
+
+            osThreadSetPriority(
+                AspirateHandle,
+                osPriorityNormal1
+            );
         }
 
         osDelay(10);
@@ -1225,12 +1415,394 @@ void Aspirate_Sample(void *argument)
 void Command_Dispatcher(void *argument)
 {
   /* USER CODE BEGIN Command_Dispatcher */
+//  uint16_t command;
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+      switch (systemState)
+      {
+          case STATE_IDLE:
+
+              /*
+               * =====================================================
+               * 1. LIMIT SWITCH HAS PRIORITY WHEN SYSTEM IS IDLE
+               * =====================================================
+               */
+              if (limitSwitchPressed)
+              {
+                  /*
+                   * Consume the event immediately.
+                   */
+                  limitSwitchPressed = 0;
+
+                  /*
+                   * Clear any old command data.
+                   */
+                  uartCmd.sensor = SENSOR_NONE;
+                  uartCmd.duration = 0;
+                  uartCmd.incubation = 0;
+                  uartCmd.start = 0;
+
+                  /*
+                   * Start aspiration.
+                   */
+                  systemState = STATE_ASPIRATE_SAMPLE;
+
+                  /*
+                   * Wake / prioritize aspiration task.
+                   */
+                  osThreadSetPriority(
+                      AspirateHandle,
+                      osPriorityRealtime
+                  );
+
+                  /*
+                   * Tell RPi that aspiration was triggered
+                   * by the limit switch.
+                   */
+                  HAL_UART_Transmit(
+                      &huart1,
+                      (uint8_t *)"LIMIT SWITCH -> ASPIRATE\r\n",
+                      26,
+                      HAL_MAX_DELAY
+                  );
+              }
+
+              /*
+               * =====================================================
+               * 2. NORMAL RPI COMMAND PROCESSING
+               * =====================================================
+               */
+              else if (uartCmd.start != 0)
+              {
+                  switch (uartCmd.start)
+                  {
+                      case 1:
+                          /*
+                           * Sensor command
+                           */
+                          if (uartCmd.sensor == SENSOR_AS7341)
+                          {
+                              systemState = STATE_AS7341_MEASURE;
+
+                              osThreadSetPriority(
+                                  AS7341_SendHandle,
+                                  osPriorityRealtime
+                              );
+                          }
+                          else if (uartCmd.sensor == SENSOR_LTR390)
+                          {
+                              systemState = STATE_LTR390_MEASURE;
+
+                              osThreadSetPriority(
+                                  Send_LTR390Handle,
+                                  osPriorityRealtime
+                              );
+                          }
+                          break;
+
+
+                      case 2:
+                          /*
+                           * Stepper home
+                           */
+                          systemState = STATE_STEPPER_HOME;
+
+                          osThreadSetPriority(
+                              Stepper_HomeHandle,
+                              osPriorityRealtime
+                          );
+                          break;
+
+
+                      case 3:
+                          /*
+                           * White LED alignment
+                           */
+                          systemState = STATE_WHITE_LED_ALIGN;
+
+                          osThreadSetPriority(
+                              White_Led_AlignHandle,
+                              osPriorityRealtime
+                          );
+                          break;
+
+
+                      case 4:
+                          /*
+                           * UV LED alignment
+                           */
+                          systemState = STATE_UV_LED_ALIGN;
+
+                          osThreadSetPriority(
+                              UV_Led_AlignHandle,
+                              osPriorityRealtime
+                          );
+                          break;
+
+
+                      case 5:
+                          /*
+                           * Manual RPi aspiration command
+                           */
+                          systemState = STATE_ASPIRATE_SAMPLE;
+
+                          osThreadSetPriority(
+                              AspirateHandle,
+                              osPriorityRealtime
+                          );
+                          break;
+
+                       case 6:
+                          /*
+                           * Flow cell cleaning
+                           */
+                          systemState = STATE_FLOW_CELL_CLEAN;
+
+                          osThreadSetPriority(
+                              Clean_Flow_CellHandle,
+                              osPriorityRealtime
+                          );
+
+                          break;
+
+
+                      default:
+                          break;
+                  }
+
+                  /*
+                   * Command has now been consumed.
+                   */
+                  uartCmd.start = 0;
+              }
+
+              break;
+
+
+          /*
+           * =========================================================
+           * BUSY STATES
+           * =========================================================
+           *
+           * These operations are handled by their own threads.
+           *
+           * Limit switch does NOT interrupt them.
+           */
+          case STATE_WHITE_LED_ALIGN:
+
+          case STATE_UV_LED_ALIGN:
+
+          case STATE_STEPPER_HOME:
+
+          case STATE_ASPIRATE_SAMPLE:
+
+          case STATE_AS7341_MEASURE:
+
+          case STATE_LTR390_MEASURE:
+
+          case STATE_FLOW_CELL_CLEAN:
+
+              /*
+               * Do nothing.
+               *
+               * The corresponding task owns this state.
+               *
+               * Limit switch presses during these states
+               * are ignored by Limit_sw_pressed().
+               */
+              break;
+
+
+          default:
+              systemState = STATE_IDLE;
+              break;
+      }
+
+      osDelay(10);
   }
   /* USER CODE END Command_Dispatcher */
+}
+
+/* USER CODE BEGIN Header_Limit_sw_pressed */
+/**
+* @brief Function implementing the Limit_sw thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Limit_sw_pressed */
+void Limit_sw_pressed(void *argument)
+{
+  /* USER CODE BEGIN Limit_sw_pressed */
+	uint8_t lastState = 0;
+  /* Infinite loop */
+  for(;;)
+  {
+      uint8_t currentState =
+          HAL_GPIO_ReadPin(Limit_SW_GPIO_Port, Limit_SW_Pin);
+
+      /*
+       * Detect NEW physical press
+       */
+      if (currentState && !lastState)
+      {
+          /*
+           * IMPORTANT:
+           * Capture whether the system was IDLE
+           * at the exact moment the switch was pressed.
+           */
+          uint8_t acceptPress = (systemState == STATE_IDLE);
+
+          /*
+           * Debounce
+           */
+          osDelay(50);
+
+          /*
+           * Verify switch is still pressed
+           */
+          currentState =
+              HAL_GPIO_ReadPin(
+                  Limit_SW_GPIO_Port,
+                  Limit_SW_Pin
+              );
+
+          /*
+           * Only generate event if:
+           *
+           * 1. It was IDLE when physically pressed
+           * 2. Switch is still pressed after debounce
+           */
+          if (currentState && acceptPress)
+          {
+              limitSwitchPressed = 1;
+          }
+      }
+
+      /*
+       * Remember physical switch state.
+       *
+       * This guarantees one event per physical press.
+       */
+      lastState = currentState;
+
+      osDelay(10);
+  }
+  /* USER CODE END Limit_sw_pressed */
+}
+
+/* USER CODE BEGIN Header_Flow_Cell_Clean */
+/**
+* @brief Function implementing the Clean_Flow_Cell thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Flow_Cell_Clean */
+void Flow_Cell_Clean(void *argument)
+{
+  /* USER CODE BEGIN Flow_Cell_Clean */
+
+  /* Infinite loop */
+  for(;;)
+  {
+      if (systemState == STATE_FLOW_CELL_CLEAN)
+      {
+
+          HAL_UART_Transmit(
+              &huart1,
+              (uint8_t *)"FLOW CELL CLEAN START\r\n",
+              23,
+              HAL_MAX_DELAY
+          );
+
+          osMutexAcquire(pumpMutexHandle, osWaitForever);
+
+
+          PUMP_Move(
+              PUMP_FORWARD,
+              2000,      // seconds
+              80      // PWM %
+          );
+
+          PUMP_Stop();
+
+          osMutexRelease(pumpMutexHandle);
+
+
+          HAL_UART_Transmit(
+              &huart1,
+              (uint8_t *)"FLOW CELL CLEAN COMPLETE\r\n",
+              27,
+              HAL_MAX_DELAY
+          );
+
+
+          uartCmd.start = 0;
+          uartCmd.sensor = SENSOR_NONE;
+          uartCmd.duration = 0;
+          uartCmd.incubation = 0;
+
+          systemState = STATE_IDLE;
+
+
+          osThreadSetPriority(
+              Clean_Flow_CellHandle,
+              osPriorityLow
+          );
+      }
+
+      osDelay(10);
+  }
+  /* USER CODE END Flow_Cell_Clean */
+}
+
+/* USER CODE BEGIN Header_pump_initialize */
+/**
+* @brief Function implementing the initialize_pump thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_pump_initialize */
+void pump_initialize(void *argument)
+{
+  /* USER CODE BEGIN pump_initialize */
+  /* Infinite loop */
+  for(;;)
+  {
+      if (initializePumpRequested)
+      {
+          initializePumpRequested = 0;
+
+          HAL_UART_Transmit(
+              &huart1,
+              (uint8_t *)"PUMP INITIALIZATION START\r\n",
+              29,
+              HAL_MAX_DELAY
+          );
+
+          osMutexAcquire(pumpMutexHandle, osWaitForever);
+
+          PUMP_Move(
+              PUMP_FORWARD,
+              1000,
+              80
+          );
+
+          PUMP_Stop();
+
+          osMutexRelease(pumpMutexHandle);
+
+          HAL_UART_Transmit(
+              &huart1,
+              (uint8_t *)"PUMP INITIALIZATION COMPLETE\r\n",
+              32,
+              HAL_MAX_DELAY
+          );
+      }
+
+      osDelay(10);
+  }
+  /* USER CODE END pump_initialize */
 }
 
 /**

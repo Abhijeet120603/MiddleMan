@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define Servo_Pin GPIO_PIN_15
+#define Servo_GPIO_Port GPIOC
 #define STEP_Pin GPIO_PIN_0
 #define STEP_GPIO_Port GPIOA
 #define EN_Pin GPIO_PIN_1
@@ -75,6 +77,14 @@ void Error_Handler(void);
 #define Pump_Forward_TIM3_CH1_GPIO_Port GPIOA
 #define Pump_Reverse_TIM3_CH1_Pin GPIO_PIN_7
 #define Pump_Reverse_TIM3_CH1_GPIO_Port GPIOA
+#define Limit_SW_Pin GPIO_PIN_1
+#define Limit_SW_GPIO_Port GPIOB
+#define Peltier2_Pin GPIO_PIN_2
+#define Peltier2_GPIO_Port GPIOB
+#define Buzzer_Pin GPIO_PIN_10
+#define Buzzer_GPIO_Port GPIOB
+#define Peltier1_Pin GPIO_PIN_12
+#define Peltier1_GPIO_Port GPIOB
 #define DS18B20_Pin GPIO_PIN_13
 #define DS18B20_GPIO_Port GPIOB
 #define White_LED_Pin GPIO_PIN_14

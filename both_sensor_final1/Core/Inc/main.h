@@ -93,6 +93,8 @@ void Error_Handler(void);
 #define UV_LED_GPIO_Port GPIOB
 #define LTR390_SCL_Pin GPIO_PIN_8
 #define LTR390_SCL_GPIO_Port GPIOA
+#define Reset_Pin GPIO_PIN_11
+#define Reset_GPIO_Port GPIOA
 #define LTR390_SDA_Pin GPIO_PIN_4
 #define LTR390_SDA_GPIO_Port GPIOB
 #define AS7341_SCL_Pin GPIO_PIN_6

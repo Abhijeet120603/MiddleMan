@@ -129,6 +129,7 @@ void Stepper_MoveReverse(uint32_t steps, uint32_t delay_ms)
     Stepper_Move(NEGATIVE, steps, delay_ms);
 }
 
+
 /**
   * @brief  Move stepper motor in specified direction for number of steps
   * @param  dir: Direction to move (POSITIVE or NEGATIVE)
@@ -375,8 +376,8 @@ void Stepper_Test(void)
   */
 void Stepper_UV_Sensor_Align(void)
 {
-    uint32_t delay_fast = 10;       // First approach speed
-    uint32_t delay_slow = 20;      // Second approach - much slower
+    uint32_t delay_fast = 5;       // First approach speed
+    uint32_t delay_slow = 15;      // Second approach - much slower
 
     uint32_t max_steps = 10000;
 
@@ -392,7 +393,7 @@ void Stepper_UV_Sensor_Align(void)
     osDelay(10);
 
     /* Direction towards groove */
-    HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
     osDelay(10);
 
     steps_moved = 0;
@@ -421,10 +422,10 @@ void Stepper_UV_Sensor_Align(void)
 
     if (groove_found)
     {
-        HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_RESET);
         osDelay(10);
 
-        for (uint32_t i = 0; i < 115; i++)
+        for (uint32_t i = 0; i < 20; i++)
         {
             Stepper_Step();
             osDelay(delay_fast);
@@ -436,7 +437,7 @@ void Stepper_UV_Sensor_Align(void)
          * Move TOWARDS groove again, MUCH SLOWER
          * ===================================================== */
 
-        HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
         osDelay(10);
 
         steps_moved = 0;
@@ -466,11 +467,12 @@ void Stepper_UV_Sensor_Align(void)
 
         if (groove_found)
         {
-            HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_RESET);
             osDelay(10);
 
 //            for (uint32_t i = 0; i < 115; i++)
-            for (uint32_t i = 0; i < 455; i++)
+//            for (uint32_t i = 0; i < 455; i++)
+            for (uint32_t i = 0; i < 490; i++)
             {
                 Stepper_Step();
                 osDelay(delay_slow);
@@ -482,7 +484,7 @@ void Stepper_UV_Sensor_Align(void)
      * FINISH
      * ========================================================= */
 
-    Stepper_Disable();
+//    Stepper_Disable();
 }
 
 
@@ -510,7 +512,7 @@ void Stepper_White_LED_Align(void)
     osDelay(10);
 
     /* Direction towards groove */
-    HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
     osDelay(10);
 
     steps_moved = 0;
@@ -539,7 +541,7 @@ void Stepper_White_LED_Align(void)
 
     if (groove_found)
     {
-        HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_RESET);
         osDelay(10);
 
         for (uint32_t i = 0; i < 20; i++)
@@ -554,7 +556,7 @@ void Stepper_White_LED_Align(void)
          * Move TOWARDS groove again, MUCH SLOWER
          * ===================================================== */
 
-        HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
         osDelay(10);
 
         steps_moved = 0;
@@ -584,11 +586,11 @@ void Stepper_White_LED_Align(void)
 
         if (groove_found)
         {
-            HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(DIR_GPIO_Port, DIR_Pin, GPIO_PIN_RESET);
             osDelay(10);
 
 //            for (uint32_t i = 0; i < 20; i++)
-            for (uint32_t i = 0; i < 70; i++)
+            for (uint32_t i = 0; i < 107; i++)
             {
                 Stepper_Step();
                 osDelay(delay_slow);
@@ -602,7 +604,7 @@ void Stepper_White_LED_Align(void)
      * FINISH
      * ========================================================= */
 
-    Stepper_Disable();
+//    Stepper_Disable();
 }
 
 /*===========================================================================

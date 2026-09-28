@@ -58,5 +58,3 @@ void Stepper_GrooveSequence(void);
 #endif
 
 #endif /* INC_STEPPER_H_ */
-
-

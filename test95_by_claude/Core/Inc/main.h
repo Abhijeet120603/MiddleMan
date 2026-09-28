@@ -67,8 +67,10 @@ void Error_Handler(void);
 #define EN_GPIO_Port GPIOA
 #define DIR_Pin GPIO_PIN_2
 #define DIR_GPIO_Port GPIOA
-#define Cancel_Sensor_Reading_Task_Pin GPIO_PIN_4
-#define Cancel_Sensor_Reading_Task_GPIO_Port GPIOA
+#define MS1_Pin GPIO_PIN_3
+#define MS1_GPIO_Port GPIOA
+#define MS2_Pin GPIO_PIN_4
+#define MS2_GPIO_Port GPIOA
 #define Groove_Sensor_In_Pin GPIO_PIN_5
 #define Groove_Sensor_In_GPIO_Port GPIOA
 #define Pump_Forward_TIM3_CH1_Pin GPIO_PIN_6
